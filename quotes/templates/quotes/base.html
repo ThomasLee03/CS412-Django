@@ -1,0 +1,30 @@
+<!--hw/templates/hw/base.html
+A template with common HTML code that will be re=used by all of the other templates
+-->
+
+{% load static %}
+<html>
+    <head>
+        <title>Hello, world!</title>
+        <!--<link rel="stylesheet" href = "/static/styles.css">-->
+        <link rel="stylesheet" href = "{% static 'styles.css' %}">
+    </head>
+
+    <body>
+        <nav>
+            <ul>
+                <!-- couple ways to do links: 
+                 Can use direct link: http://127.0.0.1:8000/hw/about
+                 Another way: /hw/about 
+                 Or do thing at bottom using scriptlink then funciton call is url then the variable is home-->
+                <li><a href = "{% url 'quote' %}">quote</a></li>
+                <li><a href = "{% url 'about' %}">About</a></li>
+                <li><a href = "{% url 'show_all' %}">show_all</a></li>
+            </ul>
+        </nav>
+        {%block content%}
+        <!--fill in this section with specific page detail-->
+        {%endblock%}
+        
+    </body>
+</html>

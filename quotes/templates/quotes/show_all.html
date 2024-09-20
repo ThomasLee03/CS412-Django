@@ -1,0 +1,33 @@
+{% extends 'quotes/base.html' %}
+
+{% block content %}
+    <h1>Famous Quotes and Images</h1>
+
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <!-- Left Side: Images -->
+            <td style="width: 50%; vertical-align: top; padding: 10px;">
+                <h2>Images</h2>
+                <ul style="list-style: none; padding: 0;">
+                    {% for image in images %}
+                        <li style="margin-bottom: 20px;">
+                            <img src="{{ image }}" alt="Image related to quote" style="max-width: 300px; height: auto;">
+                        </li>
+                    {% endfor %}
+                </ul>
+            </td>
+            
+            <!-- Right Side: Quotes -->
+            <td style="width: 50%; vertical-align: top; padding: 10px;">
+                <h2>Quotes</h2>
+                <ul style="list-style: none; padding: 0;">
+                    {% for quote in quotes %}
+                        <li style="margin-bottom: 20px;">
+                            <p>"{{ quote }}"</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

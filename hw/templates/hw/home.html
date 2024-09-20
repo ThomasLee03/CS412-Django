@@ -1,0 +1,15 @@
+<!--hw/templates/hw/home.html
+A template with common HTML code that will be re=used by all of the other templates
+-->
+
+{% extends 'hw/base.html' %}
+
+
+{%block content %}
+        <h1>Hello, world!</h1>
+        <p> welcome to our first django web app!</p>
+        <p> This page is brought to you by the letters
+            {{letter1}} and {{letter2}} and by the number {{number}}
+        </p>
+
+{%endblock%}
