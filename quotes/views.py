@@ -14,7 +14,6 @@ quotes = [
     "I don't need it. I don't need it. I definitely don’t need it.",
     "It took us three days to make that potato salad. Three days!",
     "I wumbo, you wumbo, he, she, me wumbo!",
-    "The inner machinations of my mind are an enigma.",
     "Firmly grasp it in your hand!",
     "Ravioli, ravioli, give me the formuoli!",
     "This is not your average, everyday darkness. This is... advanced darkness.",
