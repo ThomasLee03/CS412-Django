@@ -1,0 +1,43 @@
+<!-- formdata/templates/formdata/show_form.html -->
+{% extends 'restaurant/base.html' %}
+{% block content %}
+<div>
+    <h1>Welcome to Our Restaurant</h1>
+
+    <h2>Restaurant Name: The Gourmet Bistro</h2>
+
+    <h3>Location</h3>
+    <p>1234 Culinary Avenue, Food City, FC 56789</p>
+
+    <h3>Hours of Operation</h3>
+    <table>
+        <tr>
+            <th>Day</th>
+            <th>Opening Time</th>
+            <th>Closing Time</th>
+        </tr>
+        <tr>
+            <td>Monday - Friday</td>
+            <td>11:00 AM</td>
+            <td>10:00 PM</td>
+        </tr>
+        <tr>
+            <td>Saturday</td>
+            <td>12:00 PM</td>
+            <td>11:00 PM</td>
+        </tr>
+        <tr>
+            <td>Sunday</td>
+            <td>12:00 PM</td>
+            <td>9:00 PM</td>
+        </tr>
+    </table>
+
+    <h3>Our Restaurant in Photos</h3>
+    <div class="photo-gallery">
+        <img src="https://www.mydomaine.com/thmb/tbh5YRLNM_uGnl-cylY6oPvw5G8=/1278x0/filters:no_upscale():strip_icc()/brudnizki-9dc69309c7b54224b7873a0dd735faec.png" alt="Dining Area" width="300">
+        <img src="https://storage.kempinski.com/cdn-cgi/image/w=1920,f=auto,g=auto,fit=scale-down/ki-cms-prod/images/4/1/2/3/1293214-1-eng-GB/7c3e0beafdbf-74771484_4K.jpg" alt="Signature Dish" width="300">
+        <img src="https://i.pinimg.com/originals/ed/9b/9f/ed9b9f3b8b9fb7e2ca73bc12e2cf829b.jpg" alt="Restaurant Exterior" width="300">
+    </div>
+</div>
+{% endblock %}

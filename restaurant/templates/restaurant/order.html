@@ -1,0 +1,56 @@
+<!-- formdata/templates/formdata/show_form.html -->
+{% extends 'restaurant/base.html' %}
+{% block content %}
+<div>
+    <h1>Order Form</h1>
+    <form action="{% url 'confirmation' %}" method="POST">
+        {% csrf_token %}
+
+        <h3>Customer Information</h3>
+        Name: <input type="text" name="customer_name" required><br>
+        Phone: <input type="text" name="customer_phone" required><br>
+        Email: <input type="email" name="customer_email" required><br>
+
+        <h3>Menu Items</h3>
+        <label>
+            <input type="checkbox" name="menu_item" value="burger">
+            Burger - $8.99
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="menu_item" value="pasta">
+            Pasta - $12.99
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="menu_item" value="pizza">
+            Pizza - $10.99
+        </label><br>
+
+        <h4>Pizza Toppings (Select any):</h4>
+        <label><input type="checkbox" name="pizza_toppings" value="pepperoni"> Pepperoni - $0.50</label><br>
+        <label><input type="checkbox" name="pizza_toppings" value="mushrooms"> Mushrooms - $0.50</label><br>
+        <label><input type="checkbox" name="pizza_toppings" value="onions"> Onions - $0.50</label><br>
+
+        <label>
+            <input type="checkbox" name="menu_item" value="salad">
+            Salad - $7.99
+        </label><br>
+
+        <h3>Daily Special: {{ daily_special.name }}</h3>
+        <p>{{ daily_special.details }}</p>
+        <label>
+            <input type="checkbox" name="menu_item" value="{{ daily_special.name }}">
+            Order the Daily Special - ${{ daily_special.price }}
+        </label><br>
+
+        <h3>Special Instructions</h3>
+        <textarea name="special_instructions" rows="4" cols="50" placeholder="Add any special requests here..."></textarea><br>
+
+        <input type="hidden" name="daily_special_name" value="{{ daily_special.name }}">
+        <input type="hidden" name="daily_special_price" value="{{ daily_special.price }}">
+
+        <input type="submit" value="Submit Order">
+    </form>
+</div>
+{% endblock %}
