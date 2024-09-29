@@ -1,26 +1,36 @@
-<!-- formdata/templates/formdata/confirmation.html -->
 {% extends 'restaurant/base.html' %}
+
 {% block content %}
 <div>
+    <!-- Header to confirm that the order has been placed -->
     <h1>Order Confirmation</h1>
-    <p>Thank you for your order, {{ customer_name }}!</p>
-    <p>Your order:</p>
 
+    <!-- Greeting with the customer's name -->
+    <p>Thank you for your order, {{ customer_name }}!</p>
+
+    <!-- List of items ordered by the customer -->
+    <p>Your order:</p>
     <ul>
         {% for item in ordered_items %}
+        <!-- Display each ordered item's name and price -->
         <li>{{ item.name }} - ${{ item.price }}</li>
         {% empty %}
+        <!-- Message to display if no items were ordered -->
         <li>No items ordered.</li>
         {% endfor %}
     </ul>
 
+    <!-- Total price for the order -->
     <p>Total Price: ${{ total_price }}</p>
 
+    <!-- Special instructions provided by the customer -->
     <h3>Special Instructions:</h3>
     <p>{{ special_instructions }}</p>
 
+    <!-- Estimated time when the order will be ready for pickup -->
     <p>Your order will be ready by approximately {{ ready_time }}.</p>
 
+    <!-- Contact information for any issues or updates regarding the order -->
     <p>We will contact you at {{ customer_phone }} or {{ customer_email }} if we have any questions about your order.</p>
 </div>
 {% endblock %}

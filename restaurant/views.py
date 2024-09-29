@@ -8,7 +8,6 @@ from django.http import HttpRequest, HttpResponse
 import time 
 import random
 # Create your views here.
-food = ["namburger", "cheese", "water"]
 def main(request):
 
     #use this template to render the response

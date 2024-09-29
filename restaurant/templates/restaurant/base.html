@@ -1,19 +1,23 @@
-<!-- formdata/templates/formdata/base.html -->
 {% load static %}
 <html>
     <head>
         <title>Restaurant</title>
+        <!-- Link to the external stylesheet for the restaurant app -->
         <link rel="stylesheet" href="{% static 'restaurant.css' %}">
     </head>
     <body>
-        <!-- Navigation bar -->
+        <!-- Navigation bar for the site -->
         <nav>
             <ul>
+                <!-- Link to the main page of the restaurant -->
                 <li><a href="{% url 'main' %}">Main Page</a></li>
+                
+                <!-- Link to the order page where customers can place their orders -->
                 <li><a href="{% url 'order' %}">Order Page</a></li>
             </ul>
         </nav>
 
+        <!-- Content block where child templates will insert their specific content -->
         <div class="container">
             {% block content %}
             {% endblock %}
