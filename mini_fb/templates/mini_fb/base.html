@@ -1,0 +1,29 @@
+<!--mini_fb/templates/mini_fb/base.html
+author: Thomas Lee (tlee03@bu.edu), 10/5/2024
+A template with common HTML code that will be re=used by all of the other templates
+-->
+
+{% load static %}
+<html>
+    <head>
+        <title>Mini Facebook</title>
+        <!--<link rel="stylesheet" href = "/static/styles.css">-->
+        <link rel="stylesheet" href = "{% static 'styles-mini_fb.css' %}">
+    </head>
+
+    <body>
+        <nav>
+            <ul>
+            </ul>
+        </nav>
+        <header>
+            <h1>Welcome to Mini Facebook</h1>
+        </header>
+        {%block content%}
+        <!--fill in this section with specific page detail-->
+        {%endblock%}
+        <footer>
+            <p>&copy; 2024 Mini Facebook</p>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,34 @@
+<!-- mini_fb/templates/mini_fb/show_all_profiles.html
+ author: Thomas Lee (tlee03@bu.edu), 10/5/2024
+ displays all profiles
+-->
+
+{% extends 'mini_fb/base.html' %}
+
+
+{% block content %}
+<h1> Show all Profiles</h1>
+
+
+<main class = "grid-container"> 
+
+        <!--loop to display each article-->
+        {%for a in profiles %}
+        <article> 
+
+            <!-- new: display the image url stored in database-->
+            <img src = "{{a.profile_image_url}}" alt = "{{a.profile_image_url}}">
+            <div>
+                <ul> 
+                    <li> {{a.first_name}} {{a.last_name}} </li>
+                    <li> {{a.city}} </li>
+
+                </ul>
+            </div>
+
+        </article> 
+        {% endfor %}
+
+</main> 
+
+{% endblock %} 
