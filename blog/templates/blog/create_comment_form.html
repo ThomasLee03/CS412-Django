@@ -1,0 +1,22 @@
+<!-- blog/templates/blog/create_comment_form.html -->
+{% extends 'blog/base.html' %}
+{% block content %}
+<h2>Add a comment about {{article.title}}</h2>
+<form method = 'POST'>
+<!-- show this first {{form}} -->
+
+<input type='submit' name = 'Add Profile!' value= 'Add Profile!'>
+<!-- then show this version {{form.as_p}} -->
+
+<!-- then show this version -->
+{{form.as_table}}
+<!-- talk about CSRF -->
+{% csrf_token %}
+</form>
+<form action = "{% url 'article' article.pk%}">
+    <input type = "submit" name = "Cancel" value = "cancel">
+</form>
+
+
+
+{% endblock %}

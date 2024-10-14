@@ -17,12 +17,12 @@
         <article> 
 
             <!-- new: display the image url stored in database-->
-            <img src = "{{a.profile_image_url}}" alt = "{{a.profile_image_url}}">
+            <a href="{% url 'profile' a.pk %}"><img src = "{{a.profile_image_url}}" alt = "{{a.profile_image_url}}"></a>
             <div>
                 <ul> 
-                    <li> {{a.first_name}} {{a.last_name}} </li>
+                    <li><a href="{% url 'profile' a.pk %}">{{a.first_name}} {{a.last_name}}</a>  </li>
                     <li> {{a.city}} </li>
-
+                    
                 </ul>
             </div>
 

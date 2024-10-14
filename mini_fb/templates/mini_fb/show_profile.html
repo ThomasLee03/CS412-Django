@@ -1,0 +1,36 @@
+<!-- mini_fb/templates/mini_fb/show_profile.html
+ author: Thomas Lee (tlee03@bu.edu), 10/13/2024
+ displays one profile
+-->
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h1>Show Profile</h1>
+
+<article class="show-profile"> 
+    <!-- Profile Image -->
+    <img src="{{ profile.profile_image_url }}" alt="{{ profile.first_name }}'s profile image">
+
+    <div>
+        <ul> 
+            <li>Name: {{ profile.first_name }} {{ profile.last_name }}</li>
+            <li>City: {{ profile.city }}</li>
+            <li>Email Address: {{ profile.email_address }}</li>
+        </ul>
+
+        <h4>
+            <a href="{% url 'create_status' profile.pk %}">Create a status message</a>
+        </h4>
+    </div>
+</article>
+
+<!-- Display all status messages -->
+{% for c in profile.get_messages %}
+<article>
+    <div>
+        <p>{{ c.timestamp }} <br> {{ c.message }}</p>
+    </div>
+</article>
+{% endfor %}
+
+{% endblock %}

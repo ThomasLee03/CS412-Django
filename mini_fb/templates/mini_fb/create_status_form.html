@@ -1,0 +1,27 @@
+
+<!-- mini_fb/templates/mini_fb/create_status_form.html
+ author: Thomas Lee (tlee03@bu.edu), 10/13/2024
+ displays the create status 
+-->
+
+{% extends 'mini_fb/base.html' %}
+{% block content %}
+<h2>Add a status message, {{profile.first_name}} {{profile.last_name}}</h2>
+<form method = 'POST'>
+<!-- show this first {{form}} -->
+
+<input type='submit' name = 'Add a Message!' value= 'Add Message!'>
+<!-- then show this version {{form.as_p}} -->
+
+<!-- then show this version -->
+{{form.as_table}}
+<!-- talk about CSRF -->
+{% csrf_token %}
+</form>
+<form action = "{% url 'profile' profile.pk%}">
+    <input type = "submit" name = "Cancel" value = "cancel">
+</form>
+
+
+
+{% endblock %}

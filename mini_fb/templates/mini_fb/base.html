@@ -14,11 +14,13 @@ A template with common HTML code that will be re=used by all of the other templa
     <body>
         <nav>
             <ul>
+                <a href = "{% url 'show_all' %}">Home Page</a>
             </ul>
         </nav>
         <header>
             <h1>Welcome to Mini Facebook</h1>
         </header>
+        <h2><a href = "{% url 'create_profile' %}">Create a Profile</a>  </h2>
         {%block content%}
         <!--fill in this section with specific page detail-->
         {%endblock%}

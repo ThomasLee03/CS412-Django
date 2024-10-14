@@ -1,0 +1,36 @@
+{% extends 'blog/base.html' %}
+<h1>{{article.title}}</h1>
+{% block content %}
+<main class="grid-container">
+    
+    <article class="featured">
+        {% if article.image_url %}
+        <img src="{{article.image_url}}" alt="{{article.image_url}}">
+        {% endif %}
+        
+        <div>
+        <h2>{{article.title}}</h2>
+        <strong>by {{article.author}} at {{article.published}}</strong>
+        <p>
+        {{article.text}}
+        </p>
+        <h4>
+            <a href = "{% url 'create_comment' article.pk%}">Create a comment</a> </h4>
+        </div>
+    </article>
+    <div>
+    <h2>Comments</h2>
+    <!-- Comments:
+    {{article.get_comments}} -->
+    {% for c in article.get_comments %}
+    <article>
+        <div>
+        <strong>by {{c.author}} at {{c.published}}</strong>
+        <p>
+        {{c.text}}
+        </div>
+    </article>
+    {% endfor %}
+</div>
+</main>
+{% endblock %}

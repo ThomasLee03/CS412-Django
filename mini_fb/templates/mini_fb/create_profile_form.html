@@ -1,0 +1,26 @@
+<!-- mini_fb/templates/mini_fb/create_profile_form.html
+ author: Thomas Lee (tlee03@bu.edu), 10/13/2024
+ displays the create status 
+-->
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h2>Create a Profile!</h2>
+
+<div class="form-container">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Render the form fields with better structure -->
+        <table>
+            {{ form.as_table }}
+        </table>
+
+        <!-- Submit and Cancel Buttons -->
+        <div class="form-actions">
+            <input type="submit" value="Create Profile" class="btn-submit">
+            <a href="{% url 'show_all' %}" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
