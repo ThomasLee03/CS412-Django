@@ -6,11 +6,11 @@ from django.shortcuts import render
 
 
 # Create your views here.
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import * ## import models (e.g., Profile)
 from django.urls import reverse
 from django import forms
-from .forms import CreateProfileForm, CreateStatusMessageForm
+from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm, UpdateStatusMessageForm
 from typing import Any
 
 # Create your views here.
@@ -34,6 +34,34 @@ class CreateProfileView(CreateView):
     form_class = CreateProfileForm
     template_name = "mini_fb/create_profile_form.html"
 
+class UpdateProfileView(UpdateView):
+    model = Profile
+    form_class = UpdateProfileForm
+    template_name = "mini_fb/update_profile_form.html"
+
+class DeleteStatusMessageView(DeleteView):
+    model = StatusMessage 
+    context_object_name = 'status_message'
+    template_name = "mini_fb/delete_status_form.html"
+    def get_success_url(self) -> str:
+        '''Return the URL to redirect to after successfully submitting form.'''
+        # Get the profile related to the status message being deleted
+        profile = self.object.profile
+        # Use reverse to generate the URL for the profile page
+        return reverse('profile', kwargs={'pk': profile.pk})
+    
+class UpdateStatusMessageView(UpdateView):
+    model = StatusMessage 
+    form_class = UpdateStatusMessageForm
+    context_object_name = 'status_message'
+    template_name = "mini_fb/update_status_form.html"
+    def get_success_url(self) -> str:
+        '''Return the URL to redirect to after successfully submitting form.'''
+        # Get the profile related to the status message being deleted
+        profile = self.object.profile
+        # Use reverse to generate the URL for the profile page
+        return reverse('profile', kwargs={'pk': profile.pk})
+
 class CreateStatusMessageView (CreateView):
     '''A view to create a new message and save it to the database.'''
     form_class = CreateStatusMessageForm
@@ -43,7 +71,7 @@ class CreateStatusMessageView (CreateView):
         #get the context data from the super class
         context = super().get_context_data(**kwargs)
         
-        #add the article referred to by the url into this context
+        #add the message referred to by the url into this context
         profile = Profile.objects.get(pk = self.kwargs['pk'])
         context['profile'] = profile
         return context
@@ -51,8 +79,7 @@ class CreateStatusMessageView (CreateView):
         '''
         Handle the form submission. We need to set the foreign key by 
         attaching the profile to the status message object.
-        We can find the profile PK in the URL (self.kwargs).
-        '''
+        We can find the profile PK in the URL (self.kwargs).        '''
       
         print(form.cleaned_data)
 
@@ -60,8 +87,20 @@ class CreateStatusMessageView (CreateView):
         #find the profile identified by the pk (primary key) from the url pattern
         #attach this profile to the instance of the comment to set its FK
         profile = Profile.objects.get(pk=self.kwargs['pk'])
+        
         #now attach to instance of the status message 
         form.instance.profile = profile
+        # save the status message to database
+        sm = form.save()
+
+        # read the file from the form:
+        files = self.request.FILES.getlist('files')
+        for file in files:
+            # Create an image instance for each uploaded file
+            image = Image()
+            image.status_message = sm  # Set the foreign key (status message)
+            image.image_file = file  # Set the file into the ImageField
+            image.save()  # Save the Image object to the database
         #delegate work to superclass version from method
         return super().form_valid(form)
         

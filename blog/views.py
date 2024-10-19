@@ -24,7 +24,7 @@ class ShowAllView(ListView):
 
 from django.views.generic.edit import CreateView
 from django.urls import reverse
-from .forms import CreateCommentForm
+from .forms import CreateArticleForm, CreateCommentForm
 from typing import Any
 
 class CreateCommentView(CreateView):
@@ -92,3 +92,13 @@ class ArticlePageView(DetailView):
     context_object_name = 'article'
 
 
+class CreateArticleView(CreateView):
+    '''a view class to create a new article instance.'''
+    form_class = CreateArticleForm
+    template_name = 'blog/create_article_form.html'
+
+    def form_valid(self, form):
+        '''this method is called as part of the form processing'''
+        print(f'CreateArticleView.form_valid(): form.cleaned_data={form.cleaned_data}')
+        #let the superclas do the real work to see what is happening with the form
+        return super().form_valid(form)

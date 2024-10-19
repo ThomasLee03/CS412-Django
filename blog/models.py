@@ -1,4 +1,6 @@
 from django.db import models
+
+from django.urls import reverse
 class Article(models.Model):
     '''Encapsulate the idea of a Article by some author.'''
     # data attributes of a Article:
@@ -7,6 +9,9 @@ class Article(models.Model):
     text = models.TextField(blank=False)
     published = models.DateTimeField(auto_now=True)
     # image_url = models.URLField(blank=True) ## new
+
+    #image now can take in a image file
+    image_file = models.ImageField(blank = True) 
     
     def __str__(self):
         '''Return a string representation of this Article object.'''
@@ -16,6 +21,11 @@ class Article(models.Model):
         '''Return all of the comments about this article.'''
         comments = Comment.objects.filter(article=self)
         return comments
+    
+    def get_absolute_url(self):
+        '''return the URL that will display an instance of this object'''
+        #self.pk is the primary to this article instance kwargs = key word arguments
+        return reverse('article', kwargs={'pk': self.pk})
     
 class Comment(models.Model):
     '''Encapsulate the idea of a Comment on an Article.'''

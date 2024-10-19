@@ -1,0 +1,36 @@
+<!-- mini_fb/templates/mini_fb/create_profile_form.html
+ author: Thomas Lee (tlee03@bu.edu), 10/13/2024
+ displays the create status 
+-->
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h2>Update your Profile!</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    
+    <!-- Message Field -->
+    <div>
+        <label for="id_message">City</label>
+        {{ form.city }}
+    </div>
+    <div>
+        <label for="id_message">Email address</label>
+        {{ form.email_address }}
+    </div>
+    <div>
+        <label for="id_message">Profile image url</label>
+        {{ form.profile_image_url }}
+    </div>
+
+    <!-- Submit Button -->
+    <div>
+        <input type="submit" class="btn-submit" value="Update Profile!">
+    </div>
+</form>
+<!-- Form to cancel the delete and redirect back to profile (GET request) -->
+<form action="{% url 'profile' profile.pk %}">
+    <input type="submit" class="btn-cancel" value="Cancel">
+</form>
+{% endblock %}

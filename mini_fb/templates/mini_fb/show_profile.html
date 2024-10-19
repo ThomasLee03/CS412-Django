@@ -19,6 +19,7 @@
         </ul>
 
         <h4>
+            <a href="{% url 'update_profile' profile.pk %}">Update your profile</a>
             <a href="{% url 'create_status' profile.pk %}">Create a status message</a>
         </h4>
     </div>
@@ -28,7 +29,16 @@
 {% for c in profile.get_messages %}
 <article>
     <div>
-        <p>{{ c.timestamp }} <br> {{ c.message }}</p>
+        <p style="font-size: 30px; font-weight: bold;">
+            {{ c.timestamp }} <br> {{ c.message }}
+            <a href="{% url 'delete_status' c.pk %}">Delete</a>
+            <a href="{% url 'update_status' c.pk %}">Update</a>
+        </p> <br>
+            {% for img in c.get_images %}
+                {{img.uploaded_at}}  <img src='{{img.image_file.url}}' alt='{{img.image_file.url}}'> 
+            {% endfor %}
+            <br>
+            
     </div>
 </article>
 {% endfor %}

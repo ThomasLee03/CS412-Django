@@ -28,5 +28,10 @@ urlpatterns = [
     #path('', hw.urls), this will make the application on the main webpage 
     path("blog/", include("blog.urls")),
     path('mini_fb/', include('mini_fb.urls'))
-] +  static(settings.STATIC_URL,
+] 
+
+urlpatterns +=  static(settings.STATIC_URL,
     document_root = settings.STATIC_ROOT)
+#adding media directory in the url section 
+urlpatterns +=  static(settings.MEDIA_URL,
+    document_root = settings.MEDIA_ROOT)

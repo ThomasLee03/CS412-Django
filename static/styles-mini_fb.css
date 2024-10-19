@@ -50,13 +50,13 @@ nav ul a:hover {
 
 /* Profile Image Styling for show_profile */
 .show-profile img {
-    max-width: 850px;   /* Adjust the maximum width */
-    max-height: 850px;  /* Adjust the maximum height */
-    width: 100%;        /* Ensure it scales properly */
+    max-width: 850px;
+    max-height: 850px;
+    width: 100%;
     height: auto;
-    border-radius: 50%; /* Make it a circle for a Facebook-like feel */
-    object-fit: cover;  /* Ensure the image fills the space nicely */
-    margin: 10px auto;  /* Center it within the container */
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 10px auto;
     display: block;
 }
 
@@ -68,7 +68,6 @@ article {
     text-align: center;
 }
 
-/* Profile Image Styling */
 article img {
     max-width: 100%;
     height: auto;
@@ -115,32 +114,7 @@ input[type="submit"]:hover {
     background-color: #365899;
 }
 
-/* Footer Styling */
-footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #f5f6f7;
-    margin-top: 20px;
-}
-
-/* Responsive Styles */
-@media screen and (max-width: 760px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-    }
-
-    nav ul {
-        display: block;
-        text-align: center;
-    }
-
-    article {
-        margin: 10px;
-    }
-}
-
-
-/* Form Container Styling */
+/* Updated form container for styling */
 .form-container {
     max-width: 600px;
     margin: 20px auto;
@@ -150,11 +124,31 @@ footer {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Form Table Styling */
-.form-container table {
-    width: 100%;
+.form-header {
+    text-align: center;
+    font-size: 24px;
+    color: #3b5998;
     margin-bottom: 20px;
-    border-spacing: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.form-group input[type="file"],
+.form-group textarea,
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
 /* Buttons */

@@ -6,21 +6,33 @@
 
 {% extends 'mini_fb/base.html' %}
 {% block content %}
-<h2>Add a status message, {{profile.first_name}} {{profile.last_name}}</h2>
-<form method = 'POST'>
 <!-- show this first {{form}} -->
-
-<input type='submit' name = 'Add a Message!' value= 'Add Message!'>
 <!-- then show this version {{form.as_p}} -->
 
 <!-- then show this version -->
-{{form.as_table}}
-<!-- talk about CSRF -->
-{% csrf_token %}
+<h2 class="form-header">Add a Status Message, {{ profile.first_name }} {{ profile.last_name }}</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <!-- Message Field -->
+    <div class="form-group">
+        <label for="id_message">Message</label>
+        {{ form.message }}
+    </div>
+
+    <!-- File Upload Field for Multiple Images -->
+    <div class="form-group">
+        <label for="id_image_file">Upload Image(s)</label>
+        <input type="file" name = "files" multiple />
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-actions">
+        <input type="submit" class="btn-submit" value="Add Message!">
+    </div>
 </form>
-<form action = "{% url 'profile' profile.pk%}">
-    <input type = "submit" name = "Cancel" value = "cancel">
-</form>
+
 
 
 

@@ -32,6 +32,23 @@ class StatusMessage(models.Model):
     timestamp  = models.DateTimeField(auto_now=True)
    
     def __str__(self):
-        '''Return a string representation of this Comment object.'''
+        '''Return a string representation of this status message object.'''
         return f'{self.message}'
+    
+    def get_images(self):
+        '''Return all of the images about this status message.'''
+        images = Image.objects.filter(status_message=self)
+        return images
+    
+class Image(models.Model):
+    '''Encapsulate the idea of an Image stored in the media directory.'''
+    
+    # data attributes of an Image:
+    image_file = models.ImageField(upload_to='images/', blank=True) 
+    uploaded_at = models.DateTimeField(auto_now=True)
+    status_message = models.ForeignKey(StatusMessage, on_delete=models.CASCADE, related_name='images')
+
+    def __str__(self):
+        '''Return a string representation of this Image object.'''
+        return f"Image {self.id} for StatusMessage {self.status_message.id}"
   

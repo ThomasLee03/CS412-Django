@@ -4,9 +4,10 @@
 <main class="grid-container">
     
     <article class="featured">
-        {% if article.image_url %}
-        <img src="{{article.image_url}}" alt="{{article.image_url}}">
-        {% endif %}
+        <!--<img src="{{article.image_url}}" alt="{{article.image_url}}">-->
+
+        <!-- This is how we read the image source NOTE THAT IT MUST BE THE MODEL NAME.URL!!-->
+        <img src="{{article.image_file.url}}" alt="{{article.image_file.url}}">
         
         <div>
         <h2>{{article.title}}</h2>

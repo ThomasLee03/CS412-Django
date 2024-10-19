@@ -1,0 +1,19 @@
+<!-- mini_fb/templates/mini_fb/delete_status_form.html -->
+<!-- author: Thomas Lee (tlee03@bu.edu), 10/19/2024 -->
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h2>Are you sure you want to delete this status message?</h2>
+
+<!-- Form to confirm the delete (POST request) -->
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" class="btn-submit" value="Confirm Delete">
+</form>
+
+<!-- Form to cancel the delete and redirect back to profile (GET request) -->
+<form action="{% url 'profile' status_message.profile.pk %}">
+    <input type="submit" class="btn-cancel" value="Cancel">
+</form>
+
+{% endblock %}

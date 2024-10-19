@@ -9,11 +9,15 @@
 <main class="grid-container">
     {% for a in articles %}
     <article>
-        {% if a.image_url %}
+        <!-- the if statement now makes it so that no errors if an article doesnt have an image-->
         <a href="{% url 'article' a.pk %}">
-        <img src="{{a.image_url}}" alt="{{a.image_url}}">
+            {% if a.image_file %}
+            <img src="{{a.image_file.url}}" alt="{{a.image_file.url}}">
+            {% else %}
+            No image_file available.
+            {% endif %}
         </a>
-        {% endif %}
+
         
         <div>
         <h2>{{a.title}}</h2>

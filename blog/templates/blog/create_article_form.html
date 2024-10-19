@@ -1,11 +1,12 @@
 <!-- blog/templates/blog/create_comment_form.html -->
 {% extends 'blog/base.html' %}
 {% block content %}
-<h2>Add a comment about {{article.title}}</h2>
-<form method = 'POST'>
+<h2>Add an Article</h2>
+<!--enctype = encoding type used to tell the server that there is special data coming in, in this case, it is a file-->
+<form method = 'POST' enctype = "multipart/form-data">
 <!-- show this first {{form}} -->
 
-<input type='submit' name = 'Add comment!' value= 'Add comment!'>
+<input type='submit' name = 'Add Profile!' value= 'Add Profile!'>
 <!-- then show this version {{form.as_p}} -->
 
 <!-- then show this version -->
@@ -13,7 +14,7 @@
 <!-- talk about CSRF -->
 {% csrf_token %}
 </form>
-<form action = "{% url 'article' article.pk%}">
+<form action = "{% url 'show_all_one' %}">
     <input type = "submit" name = "Cancel" value = "cancel">
 </form>
 
