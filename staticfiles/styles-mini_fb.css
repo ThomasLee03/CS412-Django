@@ -1,0 +1,209 @@
+/* File: styles-mini_fb.css */
+/* Author: Thomas Lee (tlee03@bu.edu), 10/5/2024 */
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #e9ebee;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    color: #1c1e21;
+}
+
+/* Header Styling */
+header {
+    background-color: #3b5998;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Navigation */
+nav ul {
+    background-color: #4267b2;
+    padding: 10px;
+    text-align: center;
+}
+
+nav ul a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 18px;
+}
+
+nav ul a:hover {
+    text-decoration: underline;
+}
+
+/* Content Layout */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Profile Image Styling for show_profile */
+.show-profile img {
+    max-width: 850px;
+    max-height: 850px;
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 10px auto;
+    display: block;
+}
+
+.friend img {
+    max-width: 50px !important;
+    max-height: 50px !important;
+    object-fit: cover !important;
+    margin: 10px auto !important;
+    width: auto !important;  /* Ensure width auto, or it may get overridden */
+    height: auto !important;
+}
+
+
+article {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+article:not(.friend) img  {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+/* Profile Details */
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul li {
+    margin: 5px 0;
+}
+
+h1, h2 {
+    font-weight: normal;
+    color: #1c1e21;
+}
+
+/* Form Styling */
+form {
+    background-color: #f5f6f7;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+input[type="submit"] {
+    background-color: #4267b2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #365899;
+}
+
+/* Updated form container for styling */
+.form-container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    text-align: center;
+    font-size: 24px;
+    color: #3b5998;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.form-group input[type="file"],
+.form-group textarea,
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Buttons */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-submit {
+    background-color: #4267b2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #365899;
+}
+
+.btn-cancel {
+    color: #777;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s;
+}
+
+.btn-cancel:hover {
+    background-color: #e0e0e0;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-submit, .btn-cancel {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

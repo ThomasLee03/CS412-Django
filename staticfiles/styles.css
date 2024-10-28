@@ -1,0 +1,37 @@
+body{
+    color: rgb(165, 42, 42);
+    background-color:aqua;
+    
+}
+
+table {
+    color:rgb(80, 1, 133);
+    border: 1px solid;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+td{
+    border: 1px solid;
+    text-align: center;
+    padding: 20px;
+}
+
+a{
+    font-family: Arial, Helvetica, sans-serif;
+   }
+
+a:link{
+    color: hotpink;
+}
+
+a:visited{
+    color:black;
+}
+
+h2 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 30px; 
+    color: blue;
+    margin: 50px;
+    
+}

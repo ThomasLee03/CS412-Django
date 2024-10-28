@@ -1,0 +1,25 @@
+<!-- mini_fb/templates/mini_fb/news_feed.html -->
+<!-- author: Thomas Lee (tlee03@bu.edu), 10/24/2024 -->
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h2>Friend suggestions</h2>
+
+    {% for status_message in profile.get_news_feed %}
+        <article>
+            <div>
+                <img src = "{{status_message.profile.profile_image_url}}" alt = "{{status_message.profile.profile_image_url}}" class = "small-image"> <br>
+                {{status_message.profile.first_name}} {{status_message.profile.last_name}}
+                <br>
+                   {{ status_message.message }}
+                 <br>
+                {% for img in status_message.get_images %}
+                    
+                    <img src="{{img.image_file.url}}" alt="{{img.image_file.url}}" class="small-image"> 
+                {% endfor %}
+                <br>
+            </div>
+        </article>
+    {% endfor %}
+
+{% endblock %}

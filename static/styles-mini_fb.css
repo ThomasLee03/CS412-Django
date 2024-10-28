@@ -50,8 +50,8 @@ nav ul a:hover {
 
 /* Profile Image Styling for show_profile */
 .show-profile img {
-    max-width: 850px;
-    max-height: 850px;
+    max-width: 550px;
+    max-height: 450px;
     width: 100%;
     height: auto;
     border-radius: 50%;
@@ -59,6 +59,33 @@ nav ul a:hover {
     margin: 10px auto;
     display: block;
 }
+
+.friend-container {
+    display: flex; /* Enables Flexbox layout */
+    flex-wrap: wrap; /* Ensures the articles wrap to the next line if there's not enough space */
+    gap: 20px; /* Adds space between the articles */
+    justify-content: center; /* Aligns the friends to the start (can also use space-around or space-between) */
+}
+
+.friend-container .friend {
+    flex: 1 1 200px; /* Each friend will take up at least 200px of space, and flex to fill available space */
+    max-width: 200px; /* Optional: sets a maximum width for each friend */
+}
+
+.small-image {
+    max-width: 100px !important; /* Sets the maximum width of the image */
+    height: auto !important; /* Keeps the image's aspect ratio */
+    object-fit: cover !important; /* Ensures the image is cropped if necessary to fit the dimensions */
+}
+
+.friend-container .friend article {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left !important;
+}
+
 
 article {
     background-color: white;
@@ -68,7 +95,7 @@ article {
     text-align: center;
 }
 
-article img {
+article img  {
     max-width: 100%;
     height: auto;
     border-radius: 8px;

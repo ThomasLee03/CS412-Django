@@ -6,11 +6,12 @@ from django.shortcuts import render
 
 
 # Create your views here.
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .models import * ## import models (e.g., Profile)
 from django.urls import reverse
 from django import forms
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm, UpdateStatusMessageForm
+from django.shortcuts import get_object_or_404, redirect
 from typing import Any
 
 # Create your views here.
@@ -21,6 +22,32 @@ class ShowAllProfilesView(ListView):
     template_name = 'mini_fb/show_all_profiles.html'
     context_object_name = 'profiles'
 
+class ShowNewsFeedView(DetailView):
+    model = Profile
+    template_name = 'mini_fb/news_feed.html'
+    context_object_name = 'profile'
+
+class ShowFriendSuggestionsView(DetailView):
+    model = Profile
+    template_name = 'mini_fb/friend_suggestions.html'
+    context_object_name = 'profile'
+    
+
+class CreateFriendView(View):
+    def dispatch(self, request, *args, **kwargs):
+        # Get the "self" profile from the URL parameters (e.g., user initiating the friendship)
+        profile_id = self.kwargs.get('pk')
+        other_profile_id = self.kwargs.get('other_pk')
+
+        # Use get_object_or_404 to fetch the Profile objects or return a 404 if they don't exist
+        profile = get_object_or_404(Profile, pk=profile_id)
+        other_profile = get_object_or_404(Profile, pk=other_profile_id)
+
+        # Call the add_friend method on the profile object
+        result = profile.add_friend(other_profile)
+
+        # Redirect the user back to the profile page with the result
+        return redirect('profile', pk=profile_id)
 
 class ShowProfilePageView(DetailView):
     '''Show the details for one profile.'''
