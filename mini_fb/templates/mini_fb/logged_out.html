@@ -1,0 +1,14 @@
+<!-- mini_fb/templates/mini_fb/logout.html 
+author: Thomas Lee (tlee03@bu.edu), 11/2/2024 -->
+{% extends 'mini_fb/base.html' %}
+{% block content %}
+<div class="confirmation-container">
+    <h2>You have successfully logged out.</h2>
+    <p>Thank you for using Mini Facebook.</p>
+    <p>
+        <a href="{% url 'login' %}" class="login-link">Log in again</a>
+    </p>
+</div>
+
+
+{% endblock %}

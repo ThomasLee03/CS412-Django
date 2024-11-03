@@ -60,6 +60,21 @@ nav ul a:hover {
     display: block;
 }
 
+.logout-link {
+    background: none !important;
+    border: none !important;
+    color: blue !important;
+    text-decoration: underline !important;
+    cursor: pointer !important;
+    font-size: 1em !important;
+    padding: 0 !important;
+    display: inline !important;
+    text-align: left !important;
+}
+.logout-link:hover {
+    color: darkblue !important;
+}
+
 .friend-container {
     display: flex; /* Enables Flexbox layout */
     flex-wrap: wrap; /* Ensures the articles wrap to the next line if there's not enough space */
@@ -198,6 +213,40 @@ input[type="submit"]:hover {
 .btn-submit:hover {
     background-color: #365899;
 }
+
+form.logout-form {
+    display: inline !important; /* or inline-block */ 
+    text-align: left !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.confirmation-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #f5f6f7;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.confirmation-container h2 {
+    color: #333;
+}
+
+.login-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: blue;
+    text-decoration: underline;
+    font-size: 1.2em;
+}
+
+.login-link:hover {
+    color: darkblue;
+}
+
 
 .btn-cancel {
     color: #777;

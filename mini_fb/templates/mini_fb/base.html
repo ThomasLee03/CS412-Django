@@ -24,11 +24,17 @@ A template with common HTML code that will be re=used by all of the other templa
         <!-- this URL requires a logged in user:-->
         
         {% if request.user.is_authenticated %}
-                    Logged in user: {{ request.user }}. 
-                    <p><a href="{% url 'logout' %}">Logout</a></p>
+                    Logged in user: {{ request.user }}. <br>
+                    
+<!--<p><a href="{% url 'logout' %}">Logout</a></p>-->
+                    <form action="{% url 'logout' %}" method="POST" class="logout-form">
+                        {% csrf_token %}
+                        <input type="submit" value="Logout" class="logout-link">
+                    </form>
+
                     
                     {% else %}
-                    Not logged in. <li><a href = "{% url 'login' %}"> Login </a></li>
+                    Not logged in. <br><a href = "{% url 'login' %}"> Login </a>
                     {% endif %}
         {%block content%}
         <!--fill in this section with specific page detail-->
