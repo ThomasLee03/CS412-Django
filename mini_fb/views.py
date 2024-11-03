@@ -74,7 +74,7 @@ class CreateFriendView(LoginRequiredMixin, View):
         result = profile.add_friend(other_profile)
 
         # Redirect the user back to the profile page with the result
-        return redirect('profile')
+        return redirect(reverse('profile', kwargs={'pk': profile.pk}))
     def form_valid(self, form):
         '''this method is called as part of the form processing'''
         print(f'CreateArticleView.form_valid(): form.cleaned_data={form.cleaned_data}')
@@ -151,19 +151,6 @@ class DeleteStatusMessageView(LoginRequiredMixin, DeleteView):
         profile = self.object.profile
         # Use reverse to generate the URL for the profile page
         return reverse('profile', kwargs={'pk': profile.pk})
-    def form_valid(self, form):
-        '''this method is called as part of the form processing'''
-        print(f'CreateArticleView.form_valid(): form.cleaned_data={form.cleaned_data}')
-
-        #find the user who is logged in
-        user = self.request.user
-
-        #attach that user as a FK(foreign key) to the new Article instance
-        form.instance.user = user
-        #this is now setting the user to the user attribute in the model 
-
-        #let the superclas do the real work to see what is happening with the form
-        return super().form_valid(form)
     def get_login_url(self) -> str:
         '''return the url of the login page'''
         return reverse('login')
@@ -245,7 +232,8 @@ class CreateStatusMessageView (LoginRequiredMixin, CreateView):
         
     def get_success_url(self) -> str:
         '''Return the URL to redirect to after successfully submitting form.'''
-        return reverse('profile', kwargs = self.kwargs)
+        profile = Profile.objects.get(user=self.request.user)
+        return reverse('profile', kwargs={'pk': profile.pk})
     def get_login_url(self) -> str:
         '''return the url of the login page'''
         return reverse('login')

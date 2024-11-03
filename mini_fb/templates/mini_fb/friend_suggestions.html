@@ -10,7 +10,8 @@
             <article>
                 <!-- Link to add friend -->
                 {% if request.user.is_authenticated %}
-                <a href="{% url 'add_friend' profile.pk friend.pk %}">Add friend</a>
+                <a href="{% url 'add_friend' friend.pk %}">Add friend</a>
+
                 {% endif %}
                 
                 <a href="{% url 'profile' friend.pk %}"><img src = "{{friend.profile_image_url}}" alt = "{{friend.profile_image_url}}">

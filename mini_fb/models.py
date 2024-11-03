@@ -64,6 +64,12 @@ class Profile(models.Model):
         # Filter out any profiles that are already direct friends of self
         not_friends = [fof for fof in not_friends if fof not in friends and fof != self]
 
+        if not not_friends:
+            all_profiles = Profile.objects.exclude(pk=self.pk)  # Exclude self
+            not_friends = [profile for profile in all_profiles if profile not in friends]
+    
+
+
         return not_friends
     def add_friend(self, other):
         if self == other:
