@@ -1,0 +1,25 @@
+<!-- mini_fb/templates/mini_fb/login.html 
+author: Thomas Lee (tlee03@bu.edu), 11/2/2024 -->
+{% extends 'mini_fb/base.html' %}
+{% block content %}
+<h2>Login</h2>
+<form method = 'POST' enctype = "multipart/form-data">
+    {% csrf_token %}
+    {{form}}
+
+    <input type='submit' name = 'submit' value= 'submit'>
+    <!--Where to send the user to next-->
+
+    <!--Instead of fixing where to redirect the user to:<input type = 'hidden' name = 'next' value = "{% url 'show_all_one' %}">-->
+    
+
+    <!--note that when you redirect the user to the login page, it records what the page it was previously on-->
+    {% if request.GET.next %}
+    <input type = 'hidden' name = 'next' value = "{{request.GET.next}}">
+    {% else %}
+    <input type = 'hidden' name = 'next' value = "{% url 'show_all' %}">
+    {% endif %}
+</form>
+
+
+{% endblock %}

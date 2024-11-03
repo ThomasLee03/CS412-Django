@@ -5,6 +5,9 @@ from django.shortcuts import render
 # Create your views here.
 from django.views.generic import ListView, DetailView
 from .models import * ## import models (e.g., Article)
+from django.contrib.auth.mixins import LoginRequiredMixin 
+
+
 
 from django import forms
 from .models import Comment
@@ -21,6 +24,11 @@ class ShowAllView(ListView):
     model = Article #the model to display
     template_name = 'blog/show_all.html'
     context_object_name = 'articles'
+    def dispatch(self, *args, **kwargs):
+        '''implement this method to add some debug tracing'''
+        #let the superclas version of this method do its work:
+        print(f"ShowAllView.dispatch; self.request.user = {self.request.user}")
+        return super().dispatch(*args, **kwargs)
 
 from django.views.generic.edit import CreateView
 from django.urls import reverse
@@ -92,7 +100,7 @@ class ArticlePageView(DetailView):
     context_object_name = 'article'
 
 
-class CreateArticleView(CreateView):
+class CreateArticleView(LoginRequiredMixin, CreateView):
     '''a view class to create a new article instance.'''
     form_class = CreateArticleForm
     template_name = 'blog/create_article_form.html'
@@ -100,5 +108,63 @@ class CreateArticleView(CreateView):
     def form_valid(self, form):
         '''this method is called as part of the form processing'''
         print(f'CreateArticleView.form_valid(): form.cleaned_data={form.cleaned_data}')
+
+        #find the user who is logged in
+        user = self.request.user
+
+        #attach that user as a FK(foreign key) to the new Article instance
+        form.instance.user = user
+        #this is now setting the user to the user attribute in the model 
+
         #let the superclas do the real work to see what is happening with the form
         return super().form_valid(form)
+    
+    def get_login_url(self) -> str:
+        '''return the url of the login page'''
+        return reverse('login')
+    
+#stuff to create a user
+from django.contrib.auth.forms import UserCreationForm 
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.shortcuts import redirect
+
+class RegistrationView(CreateView):
+    '''Handle registration of new Users'''
+
+    template_name = 'blog/register.html'
+    form_class = UserCreationForm #built-in from django.contrib.auth.forms
+    def dispatch(self, request, *args, **kwargs):
+        '''Handle the User creation form submission'''
+
+        #if we received an HTTP POST, we handle it
+        if self.request.POST:
+            #we handle it
+            print(f"RegistrationView.patch: self.request.POST{self.request.POST}")
+
+            #reconstruct the UserCreateForm from the POST data
+            form = UserCreationForm(self.request.POST)
+            
+            #save the form, which creates a new User
+            
+            if not form.is_valid():
+                print(f"form.errors = {form.errors}")
+                #let CreateView.dispatch handle the problem 
+                return super().dispatch(request, *args, **kwargs)
+            
+            
+            user = form.save() #this will commit the insert to the database
+            print(f"RegistrationView.dispatch: created user {user}")
+            #log the User in
+            login(self.request,user)
+            
+            print(f"RegistrationView.dispatch: {user} is logged in.")
+
+            #note for mini_fb: attach the FK user to the Profile form instance 
+
+
+            #return a reponse:
+            return redirect(reverse('show_all_one'))
+
+        #let CreateView.dispathch handle the HTTP GET request
+        return super().dispatch(request, *args, **kwargs)

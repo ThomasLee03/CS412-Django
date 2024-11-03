@@ -20,7 +20,16 @@ A template with common HTML code that will be re=used by all of the other templa
         <header>
             <h1>Welcome to Mini Facebook</h1>
         </header>
-        <h2><a href = "{% url 'create_profile' %}">Create a Profile</a>  </h2>
+        <h2><a href = "{% url 'create_profile' %}">Create a Profile</a> </h2>
+        <!-- this URL requires a logged in user:-->
+        
+        {% if request.user.is_authenticated %}
+                    Logged in user: {{ request.user }}. 
+                    <p><a href="{% url 'logout' %}">Logout</a></p>
+                    
+                    {% else %}
+                    Not logged in. <li><a href = "{% url 'login' %}"> Login </a></li>
+                    {% endif %}
         {%block content%}
         <!--fill in this section with specific page detail-->
         {%endblock%}

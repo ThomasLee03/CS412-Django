@@ -1,8 +1,14 @@
 from django.db import models
 
 from django.urls import reverse
+from django.contrib.auth.models import User ##this imports the user accounts
+
 class Article(models.Model):
     '''Encapsulate the idea of a Article by some author.'''
+
+    #every article has one User:
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
     # data attributes of a Article:
     title = models.TextField(blank=False)
     author = models.TextField(blank=False)

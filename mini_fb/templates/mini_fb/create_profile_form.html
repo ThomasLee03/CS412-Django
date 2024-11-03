@@ -1,4 +1,4 @@
-<!-- mini_fb/templates/mini_fb/create_status_form.html
+<!-- mini_fb/templates/mini_fb/create_profile_form.html
  author: Thomas Lee (tlee03@bu.edu), 10/13/2024
  displays the create status 
 -->
@@ -12,6 +12,10 @@
         {% csrf_token %}
         
         <!-- Render the form fields with better structure -->
+
+        <table>
+            {{ UCForm.as_table}}
+        </table>
         <table>
             {{ form.as_table }}
         </table>

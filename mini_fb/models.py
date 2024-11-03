@@ -4,6 +4,7 @@ from django.db import models
 # author: Thomas Lee (tlee03@bu.edu), 10/5/2024
 from django.urls import reverse
 from django.db.models import Q
+from django.contrib.auth.models import User ##this imports the user accounts
 # Create your models here.
 
 class Friend(models.Model):
@@ -20,6 +21,9 @@ class Profile(models.Model):
     city = models.TextField(blank=False)
     email_address = models.TextField(blank=False)
     profile_image_url = models.URLField(blank = True)
+
+    #now each profile is associated with a user 
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def get_messages(self):
         '''Return all of the comments about this article.'''

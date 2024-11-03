@@ -13,6 +13,12 @@ from django import forms
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm, UpdateStatusMessageForm
 from django.shortcuts import get_object_or_404, redirect
 from typing import Any
+from django.contrib.auth.mixins import LoginRequiredMixin 
+from django.contrib.auth import logout
+
+def custom_logout(request):
+    logout(request)
+    return redirect('show_all')  # Redirect to the homepage or another page
 
 # Create your views here.
 #class based-view
@@ -26,28 +32,76 @@ class ShowNewsFeedView(DetailView):
     model = Profile
     template_name = 'mini_fb/news_feed.html'
     context_object_name = 'profile'
+    def get_object(self):
+        '''Return the Profile object associated with that user.'''
+        user = self.request.user
+        try:
+            # Retrieve the Profile object for the logged-in user
+            profile = Profile.objects.get(user=user)
+            return profile
+        except Profile.DoesNotExist:
+            # Optionally handle the case where no Profile exists
+            # Return None or redirect, depending on your app's needs
+            return None
 
 class ShowFriendSuggestionsView(DetailView):
     model = Profile
     template_name = 'mini_fb/friend_suggestions.html'
     context_object_name = 'profile'
+    def get_object(self):
+        '''Return the Profile object associated with that user.'''
+        user = self.request.user
+        try:
+            # Retrieve the Profile object for the logged-in user
+            profile = Profile.objects.get(user=user)
+            return profile
+        except Profile.DoesNotExist:
+            # Optionally handle the case where no Profile exists
+            # Return None or redirect, depending on your app's needs
+            return None
     
 
-class CreateFriendView(View):
+class CreateFriendView(LoginRequiredMixin, View):
     def dispatch(self, request, *args, **kwargs):
         # Get the "self" profile from the URL parameters (e.g., user initiating the friendship)
-        profile_id = self.kwargs.get('pk')
         other_profile_id = self.kwargs.get('other_pk')
 
         # Use get_object_or_404 to fetch the Profile objects or return a 404 if they don't exist
-        profile = get_object_or_404(Profile, pk=profile_id)
+        profile = get_object_or_404(Profile, user = request.user)
         other_profile = get_object_or_404(Profile, pk=other_profile_id)
 
         # Call the add_friend method on the profile object
         result = profile.add_friend(other_profile)
 
         # Redirect the user back to the profile page with the result
-        return redirect('profile', pk=profile_id)
+        return redirect('profile')
+    def form_valid(self, form):
+        '''this method is called as part of the form processing'''
+        print(f'CreateArticleView.form_valid(): form.cleaned_data={form.cleaned_data}')
+
+        #find the user who is logged in
+        user = self.request.user
+
+        #attach that user as a FK(foreign key) to the new Article instance
+        form.instance.user = user
+        #this is now setting the user to the user attribute in the model 
+
+        #let the superclas do the real work to see what is happening with the form
+        return super().form_valid(form)
+    def get_login_url(self) -> str:
+        '''return the url of the login page'''
+        return reverse('login')
+    def get_object(self):
+        '''Return the Profile object associated with that user.'''
+        user = self.request.user
+        try:
+            # Retrieve the Profile object for the logged-in user
+            profile = Profile.objects.get(user=user)
+            return profile
+        except Profile.DoesNotExist:
+            # Optionally handle the case where no Profile exists
+            # Return None or redirect, depending on your app's needs
+            return None
 
 class ShowProfilePageView(DetailView):
     '''Show the details for one profile.'''
@@ -55,18 +109,39 @@ class ShowProfilePageView(DetailView):
     template_name = 'mini_fb/show_profile.html' 
     context_object_name = 'profile'
 
-class CreateProfileView(CreateView):
-    '''A view to create a new profile and save it to the database.'''
-    model = Profile
-    form_class = CreateProfileForm
-    template_name = "mini_fb/create_profile_form.html"
-
-class UpdateProfileView(UpdateView):
+class UpdateProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
     form_class = UpdateProfileForm
     template_name = "mini_fb/update_profile_form.html"
+    def form_valid(self, form):
+        '''this method is called as part of the form processing'''
+        print(f'CreateArticleView.form_valid(): form.cleaned_data={form.cleaned_data}')
 
-class DeleteStatusMessageView(DeleteView):
+        #find the user who is logged in
+        user = self.request.user
+
+        #attach that user as a FK(foreign key) to the new Article instance
+        form.instance.user = user
+        #this is now setting the user to the user attribute in the model 
+
+        #let the superclas do the real work to see what is happening with the form
+        return super().form_valid(form)
+    def get_login_url(self) -> str:
+        '''return the url of the login page'''
+        return reverse('login')
+    def get_object(self):
+        '''Return the Profile object associated with that user.'''
+        user = self.request.user
+        try:
+            # Retrieve the Profile object for the logged-in user
+            profile = Profile.objects.get(user=user)
+            return profile
+        except Profile.DoesNotExist:
+            # Optionally handle the case where no Profile exists
+            # Return None or redirect, depending on your app's needs
+            return None
+
+class DeleteStatusMessageView(LoginRequiredMixin, DeleteView):
     model = StatusMessage 
     context_object_name = 'status_message'
     template_name = "mini_fb/delete_status_form.html"
@@ -76,8 +151,24 @@ class DeleteStatusMessageView(DeleteView):
         profile = self.object.profile
         # Use reverse to generate the URL for the profile page
         return reverse('profile', kwargs={'pk': profile.pk})
+    def form_valid(self, form):
+        '''this method is called as part of the form processing'''
+        print(f'CreateArticleView.form_valid(): form.cleaned_data={form.cleaned_data}')
+
+        #find the user who is logged in
+        user = self.request.user
+
+        #attach that user as a FK(foreign key) to the new Article instance
+        form.instance.user = user
+        #this is now setting the user to the user attribute in the model 
+
+        #let the superclas do the real work to see what is happening with the form
+        return super().form_valid(form)
+    def get_login_url(self) -> str:
+        '''return the url of the login page'''
+        return reverse('login')
     
-class UpdateStatusMessageView(UpdateView):
+class UpdateStatusMessageView(LoginRequiredMixin, UpdateView):
     model = StatusMessage 
     form_class = UpdateStatusMessageForm
     context_object_name = 'status_message'
@@ -88,8 +179,24 @@ class UpdateStatusMessageView(UpdateView):
         profile = self.object.profile
         # Use reverse to generate the URL for the profile page
         return reverse('profile', kwargs={'pk': profile.pk})
+    def form_valid(self, form):
+        '''this method is called as part of the form processing'''
+        print(f'CreateArticleView.form_valid(): form.cleaned_data={form.cleaned_data}')
 
-class CreateStatusMessageView (CreateView):
+        #find the user who is logged in
+        user = self.request.user
+
+        #attach that user as a FK(foreign key) to the new Article instance
+        form.instance.user = user
+        #this is now setting the user to the user attribute in the model 
+
+        #let the superclas do the real work to see what is happening with the form
+        return super().form_valid(form)
+    def get_login_url(self) -> str:
+        '''return the url of the login page'''
+        return reverse('login')
+
+class CreateStatusMessageView (LoginRequiredMixin, CreateView):
     '''A view to create a new message and save it to the database.'''
     form_class = CreateStatusMessageForm
     template_name = "mini_fb/create_status_form.html"
@@ -99,7 +206,7 @@ class CreateStatusMessageView (CreateView):
         context = super().get_context_data(**kwargs)
         
         #add the message referred to by the url into this context
-        profile = Profile.objects.get(pk = self.kwargs['pk'])
+        profile = Profile.objects.get(user= self.request.user)
         context['profile'] = profile
         return context
     def form_valid(self, form):
@@ -113,7 +220,12 @@ class CreateStatusMessageView (CreateView):
         #self.kwargs stands for key word arguments 
         #find the profile identified by the pk (primary key) from the url pattern
         #attach this profile to the instance of the comment to set its FK
-        profile = Profile.objects.get(pk=self.kwargs['pk'])
+        profile = Profile.objects.get(user= self.request.user)
+        #find the user who is logged in
+        user = self.request.user
+
+        #attach that user as a FK(foreign key) to the new Article instance
+        form.instance.user = user
         
         #now attach to instance of the status message 
         form.instance.profile = profile
@@ -134,3 +246,113 @@ class CreateStatusMessageView (CreateView):
     def get_success_url(self) -> str:
         '''Return the URL to redirect to after successfully submitting form.'''
         return reverse('profile', kwargs = self.kwargs)
+    def get_login_url(self) -> str:
+        '''return the url of the login page'''
+        return reverse('login')
+    def get_object(self):
+        '''Return the Profile object associated with that user.'''
+        user = self.request.user
+        try:
+            # Retrieve the Profile object for the logged-in user
+            profile = Profile.objects.get(user=user)
+            return profile
+        except Profile.DoesNotExist:
+            # Optionally handle the case where no Profile exists
+            # Return None or redirect, depending on your app's needs
+            return None
+
+class CreateProfileView(CreateView):
+    '''A view to create a new profile and save it to the database.'''
+    model = Profile
+    form_class = CreateProfileForm
+    template_name = "mini_fb/create_profile_form.html"
+    def form_valid(self, form):
+        '''This method is called as part of the form processing.'''
+        print(f'CreateProfileView.form_valid(): form.cleaned_data={form.cleaned_data}')
+        
+        # Reconstruct the UserCreationForm with POST data
+        user_form = UserCreationForm(self.request.POST)
+        
+        # Validate and save the UserCreationForm to create a new User
+        if user_form.is_valid():
+            user = user_form.save()  # Save the new User instance
+            print(f"CreateProfileView.form_valid: created user {user}")
+            
+            # Log the new user in
+            login(self.request, user)
+            print(f"CreateProfileView.form_valid: {user} is logged in.")
+            
+            # Attach the user to the Profile instance
+            form.instance.user = user
+            
+            # Delegate the rest to the superclass' form_valid method
+            return super().form_valid(form)
+        else:
+            # If the UserCreationForm is invalid, re-render the form with errors
+            print(f"CreateProfileView.form_valid: user_form errors: {user_form.errors}")
+            return self.form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        #create new form and add the information and add the form itself to the context 
+        context['UCForm'] = UserCreationForm()  # Create an instance of the form
+        return context
+    def get_object(self):
+        '''Return the Profile object associated with that user.'''
+        user = self.request.user
+        try:
+            # Retrieve the Profile object for the logged-in user
+            profile = Profile.objects.get(user=user)
+            return profile
+        except Profile.DoesNotExist:
+            # Optionally handle the case where no Profile exists
+            # Return None or redirect, depending on your app's needs
+            return None
+
+
+#stuff to create a user
+from django.contrib.auth.forms import UserCreationForm 
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.shortcuts import redirect
+
+class RegistrationView(CreateView):
+    '''Handle registration of new Users'''
+
+    template_name = 'mini_fb/register.html'
+    form_class = UserCreationForm #built-in from django.contrib.auth.forms
+    def dispatch(self, request, *args, **kwargs):
+        '''Handle the User creation form submission'''
+
+        #if we received an HTTP POST, we handle it
+        if self.request.POST:
+            #we handle it
+            print(f"RegistrationView.patch: self.request.POST{self.request.POST}")
+
+            #reconstruct the UserCreateForm from the POST data
+            form = UserCreationForm(self.request.POST)
+            
+            #save the form, which creates a new User
+            
+            if not form.is_valid():
+                print(f"form.errors = {form.errors}")
+                #let CreateView.dispatch handle the problem 
+                return super().dispatch(request, *args, **kwargs)
+            
+            
+            user = form.save() #this will commit the insert to the database
+            print(f"RegistrationView.dispatch: created user {user}")
+            #log the User in
+            login(self.request,user)
+            
+            print(f"RegistrationView.dispatch: {user} is logged in.")
+
+            #note for mini_fb: attach the FK user to the Profile form instance 
+
+
+            #return a reponse:
+            return redirect(reverse('show_all_one'))
+
+        #let CreateView.dispathch handle the HTTP GET request
+        return super().dispatch(request, *args, **kwargs)
