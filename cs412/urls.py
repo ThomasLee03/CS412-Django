@@ -27,7 +27,9 @@ urlpatterns = [
     path('restaurant/', include('restaurant.urls')),
     #path('', hw.urls), this will make the application on the main webpage 
     path("blog/", include("blog.urls")),
-    path('mini_fb/', include('mini_fb.urls'))
+    path('mini_fb/', include('mini_fb.urls')),
+    path('marathon_analytics/', include('marathon_analytics.urls')),
+    path('voter_analytics/', include('voter_analytics.urls'))
 ] 
 
 urlpatterns +=  static(settings.STATIC_URL,

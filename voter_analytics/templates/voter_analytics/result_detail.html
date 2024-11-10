@@ -1,0 +1,36 @@
+<!-- templates/voter_analytics/result_detail.html -->
+ <!--author: Thomas Lee (tlee03@bu.edu), 11/10/2024-->
+{% extends 'voter_analytics/base.html' %}
+
+{% block content %}
+<h1>Voter Details</h1>
+
+<div class="container">
+    <table>
+        <tr><th>Last Name</th><td>{{ r.last_name }}</td></tr>
+        <tr><th>First Name</th><td>{{ r.first_name }}</td></tr>
+        <tr><th>Street Number</th><td>{{ r.streetNumber }}</td></tr>
+        <tr><th>Street Name</th><td>{{ r.streetName }}</td></tr>
+        <tr><th>Apt Number</th><td>{{ r.aptNumber }}</td></tr>
+        <tr><th>ZIP Code</th><td>{{ r.ZIPCode }}</td></tr>
+        <tr><th>Date of Birth</th><td>{{ r.dob }}</td></tr>
+        <tr><th>Date of Registration</th><td>{{ r.dor }}</td></tr>
+        <tr><th>Party Affiliation</th><td>{{ r.partyAffiliation }}</td></tr>
+        <tr><th>Precinct Number</th><td>{{ r.PrecinctNumber }}</td></tr>
+        <tr><th>Voter Score</th><td>{{ r.voter_score }}</td></tr>
+        <tr><th>2020 State Election</th><td>{{ r.v20state }}</td></tr>
+        <tr><th>2021 Town Election</th><td>{{ r.v21town }}</td></tr>
+        <tr><th>2021 Primary</th><td>{{ r.v21primary }}</td></tr>
+        <tr><th>2022 General Election</th><td>{{ r.v22general }}</td></tr>
+        <tr><th>2023 Town Election</th><td>{{ r.v23town }}</td></tr>
+    </table>
+
+    <!-- Google Maps Link -->
+    <div style="margin-top: 20px;">
+        <h3>Location</h3>
+        <a href="https://www.google.com/maps/search/?api=1&query={{ r.streetNumber }}+{{ r.streetName }}+{{ r.ZIPCode }}" target="_blank">
+            View Address on Google Maps
+        </a>
+    </div>
+</div>
+{% endblock %}

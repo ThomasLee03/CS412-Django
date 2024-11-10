@@ -1,0 +1,86 @@
+<!-- voter_analytics/search.html -->
+ <!--author: Thomas Lee (tlee03@bu.edu), 11/10/2024-->
+<h3>Search Form</h3>
+<table>
+<form action="{{ form_action }}">
+    <tr>
+        <th>Party Affiliation:</th>
+        <td>
+            <select name="partyAffiliation">
+                <option value="">Select</option>
+                <option value="D">Democratic</option>
+                <option value="R">Republican</option>
+                <option value="CC">Constitution Party</option>
+                <option value="L">Libertarian Party</option>
+                <option value="T">Tea Party</option>
+                <option value="O">Other</option>
+                <option value="G">Green Party</option>
+                <option value="J">Independent Party</option>
+                <option value="Q">Reform Party</option>
+                <option value="FF">Freedom Party</option>
+            </select>
+        </td>
+    </tr>
+
+    <tr>
+        <th>Minimum Date of Birth:</th>
+        <td>
+            <select name="dobmin">
+                <option value="">Select Year</option>
+                {% for year in years %}
+                    <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+                
+
+            </select>
+        </td>
+    </tr>
+
+    <!-- Maximum Date of Birth Dropdown by Year -->
+    <tr>
+        <th>Maximum Date of Birth:</th>
+        <td>
+            <select name="dobmax">
+                <option value="">Select Year</option>
+                {% for year in years %}\
+                    <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+
+
+            </select>
+        </td>
+    </tr>
+
+    <!-- Voter Score Dropdown -->
+    <tr>
+        <th>Voter Score:</th>
+        <td>
+            <select name="voterScore">
+                <option value="">Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>Voted in Specific Elections:</th>
+        <td>
+            <label><input type="checkbox" name="election" value="2020 State Election"> 2020 State Election</label><br>
+            <label><input type="checkbox" name="election" value="2021 Town Election"> 2021 Town Election</label><br>
+            <label><input type="checkbox" name="election" value="Primary Election"> Primary Election</label><br>
+            <label><input type="checkbox" name="election" value="2022 General Election"> 2022 General Election</label><br>
+            <label><input type="checkbox" name="election" value="2023 Town Election"> 2023 Town Election</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td><input type="submit"></td>
+        <td></td>
+    </tr>
+    
+</form>
+</table>

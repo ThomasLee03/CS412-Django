@@ -1,0 +1,13 @@
+<!-- templates/voter_analytics/result_graphs.html -->
+  <!--author: Thomas Lee (tlee03@bu.edu), 11/10/2024-->
+{% extends 'voter_analytics/base.html' %}
+{% block content %}
+    {% include "voter_analytics/search.html" with form_action=request.path %}
+
+    <h1>Voter Birth Year Distribution</h1>
+    <div>{{ bar_div | safe }}</div>
+    <h1>Voter by Party Affiliation</h1>
+    <div>{{ pie_div | safe }}</div>
+    <h1>Voter Participation in Elections</h1>
+    <div>{{ bar_div2 | safe }}</div>
+{% endblock %}
