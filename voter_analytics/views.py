@@ -158,7 +158,7 @@ class ResultGraphsView(ListView):
         # Extract years and counts for plotting
         x = [str(item['year_of_birth']) for item in birth_year_counts]
         y = [item['count'] for item in birth_year_counts]
-
+        # Create the bar chart
         fig = go.Bar(x=x, y=y)
         bar_div = plotly.offline.plot({'data': [fig]}, auto_open = False, output_type = 'div')
         context['bar_div'] = bar_div
