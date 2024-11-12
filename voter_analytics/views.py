@@ -55,8 +55,8 @@ class ResultsListView(ListView):
 
         if 'election' in self.request.GET:
             selected_elections = self.request.GET.getlist('election')
-            print("Selected Elections:", selected_elections)
-            print("Query Before Filtering Elections:", qs.query)
+            #print("Selected Elections:", selected_elections)
+            #print("Query Before Filtering Elections:", qs.query)
             # Assuming each election corresponds to a field in your model, such as v20state, v21town, etc.
             # Use Q objects for complex OR filtering across multiple fields
             if '2020 State Election' in selected_elections:
@@ -83,7 +83,7 @@ class ResultDetailView(DetailView):
 
 class ResultGraphsView(ListView):
 
-    template_name = 'voter_analytics/result_graphs.html'
+    template_name = 'voter_analytics/graphs.html'
     model = Voter
     context_object_name = 'r'
     def get_context_data(self, **kwargs):
@@ -124,8 +124,8 @@ class ResultGraphsView(ListView):
 
         if 'election' in self.request.GET:
             selected_elections = self.request.GET.getlist('election')
-            print("Selected Elections:", selected_elections)
-            print("Query Before Filtering Elections:", qs.query)
+           # print("Selected Elections:", selected_elections)
+            #print("Query Before Filtering Elections:", qs.query)
             # Assuming each election corresponds to a field in your model, such as v20state, v21town, etc.
             # Use Q objects for complex OR filtering across multiple fields
             if '2020 State Election' in selected_elections:
@@ -138,7 +138,7 @@ class ResultGraphsView(ListView):
                 qs = qs.filter(v22general='TRUE')
             if '2023 Town Election' in selected_elections:
                 qs = qs.filter(v23town='TRUE')
-
+        context['number'] = len(qs)
         # Get the count of voters by each party affiliation
         party_counts = qs.values('partyAffiliation').annotate(count=Count('partyAffiliation'))
 
