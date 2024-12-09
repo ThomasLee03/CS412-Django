@@ -1,13 +1,24 @@
 {% extends "FinalProject/base.html" %}
 
 {% block content %}
-  <h1>{{ paper.title }}</h1>
-  <div>
+<!-- 
+# file: view_paper.html
+# author: Thomas Lee (tlee03@bu.edu), 12/9/2024
+# This template is used to display the details of a single paper. 
+# It shows the title of the paper and its processed content.
+# The user can edit or delete the paper using the provided buttons.
+-->
+
+<h1>{{ paper.title }}</h1>
+<div>
+    <!-- Display the processed content of the paper, ensuring any HTML is rendered properly -->
     {{ processed_content|safe }}
-  </div>
+</div>
 
-
-
+<!-- Button to edit the paper -->
 <a href="{% url 'edit_paper' paper.id %}" class="btn btn-primary">Edit Paper</a>
+
+<!-- Button to delete the paper -->
 <a href="{% url 'delete_paper' paper.pk %}" class="btn btn-danger btn-sm">Delete</a>
+
 {% endblock %}

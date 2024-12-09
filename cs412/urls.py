@@ -23,7 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('hw/', include('hw.urls')), ##we create the URL hw/, and associate it with URLs in another file
     path('quotes/', include('quotes.urls')),
-    path('formdata/', include('formdata.urls')),
     path('restaurant/', include('restaurant.urls')),
     #path('', hw.urls), this will make the application on the main webpage 
     path("blog/", include("blog.urls")),

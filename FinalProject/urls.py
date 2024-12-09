@@ -1,3 +1,7 @@
+#FinalProject/urls.py
+# author: Thomas Lee (tlee03@bu.edu), 11/15/2024
+#description: URL patterns for the new FinalProject app
+
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from django.views.generic import TemplateView

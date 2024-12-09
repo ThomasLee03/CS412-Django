@@ -1,29 +1,40 @@
 {% load static %}
+
+<!-- 
+# file: base.html
+# author: Thomas Lee (tlee03@bu.edu), 11/15/2024
+# This is the base template for the Academic Website, including common elements like the navbar, title, and linked resources. 
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Academic Website{% endblock %} </title>
+    <!-- Title of the page, customizable per page -->
+    <title>{% block title %}Academic Website{% endblock %}</title>
 
-    <!-- Link to your custom stylesheet -->
+    <!-- Link to the custom stylesheet for the project -->
     <link rel="stylesheet" href="{% static 'FinaProject.css' %}">
-    <!-- Link to Bootstrap CDN for the navbar styling -->
+    
+    <!-- Link to Bootstrap CDN for styling the navbar and other elements -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
+    <!-- Navbar section - This includes links to various pages and handles login/logout functionality -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Brand link to the dashboard -->
         <a class="navbar-brand" href="{% url 'dashboard' %}">Academic Website</a>
         
-        <!-- Navbar toggle button for mobile -->
+        <!-- Button to toggle the navbar for mobile devices -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         
-        <!-- Navbar links -->
+        <!-- Navbar links: These provide navigation to different sections of the website -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
+                <!-- Navigation links for different pages -->
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'import_image' %}">Upload Image</a>
                 </li>
@@ -42,8 +53,7 @@
                     </a>
                 </li>
 
-                
-
+                <!-- Login/Logout based on user authentication -->
                 {% if user.is_authenticated %}
                 <li class="nav-item">
                     <form method="post" action="{% url 'logoutFP' %}">
@@ -53,20 +63,21 @@
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" class="btn-link" href="{% url 'login' %}">Login</a>
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
                 </li>
                 {% endif %}
             </ul>
         </div>
     </nav>
 
-    <!-- Main content container -->
+    <!-- Main content container where page-specific content will be injected -->
     <div class="container mt-4">
+        <!-- The content block will be overridden by each page that extends this base template -->
         {% block content %}
         {% endblock %}
     </div>
 
-    <!-- Bootstrap and jQuery scripts -->
+    <!-- Bootstrap and jQuery scripts for interactivity -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

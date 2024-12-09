@@ -1,19 +1,38 @@
 {% extends "FinalProject/base.html" %}
+
+<!-- 
+# file: imputation_form.html
+# author: Thomas Lee (tlee03@bu.edu), 12/9/2024
+# This template extends the base template and provides a form to select an imputation method
+# for a given corrupted image. The imputation methods available are Mean, Median, Mode, PCA, 
+# and Total Variation in Painting. The selected method will be applied to the corrupted image.
+-->
+
 {% block title %}Select Imputation Method{% endblock %}
 {% block content %}
-<h1>Select Imputation Method</h1>
-<form method="POST" action="{% url 'apply_imputation' %}">
-    {% csrf_token %}
-    <input type="hidden" name="corrupted_image_id" value="{{ corrupted_image.id }}">
-    <select name="imputation_method">
-        <option value="mean">Mean</option>
-        <option value="median">Median</option>
-        <option value="mode">Mode</option>
-        <option value ="pca"> PCA</option>
-        <option value ="total_variation"> Total Variation in Painting</option>
-    </select>
-    <button type="submit">Apply Imputation</button>
-</form>
+  <!-- Main header for the page -->
+  <h1>Select Imputation Method</h1>
 
-<a href="{% url 'view_generated_image' pk=form.initial.corrupted_image_id %}" class="btn btn-secondary mt-3">Back to Corrupted Image</a>
+  <!-- Form to apply the imputation method to the corrupted image -->
+  <form method="POST" action="{% url 'apply_imputation' %}">
+    {% csrf_token %}
+    
+    <!-- Hidden input field to store the corrupted image ID -->
+    <input type="hidden" name="corrupted_image_id" value="{{ corrupted_image.id }}">
+
+    <!-- Dropdown to select the imputation method -->
+    <select name="imputation_method">
+      <option value="mean">Mean</option>
+      <option value="median">Median</option>
+      <option value="mode">Mode</option>
+      <option value="pca">PCA</option>
+      <option value="total_variation">Total Variation in Painting</option>
+    </select>
+
+    <!-- Button to submit the form and apply the selected imputation method -->
+    <button type="submit">Apply Imputation</button>
+  </form>
+
+  <!-- Link to go back to the corrupted image page -->
+  <a href="{% url 'view_generated_image' pk=form.initial.corrupted_image_id %}" class="btn btn-secondary mt-3">Back to Corrupted Image</a>
 {% endblock %}

@@ -1,9 +1,18 @@
 {% extends "FinalProject/base.html" %}
 
+<!-- 
+# file: generated_image_display.html
+# author: Thomas Lee (tlee03@bu.edu), 12/9/2024
+# This template extends the base template and is used to display images related to the imputation process.
+# It includes sections for displaying the original image, corrupted image (if available), mask image (if available),
+# and a form to select an imputation method, including the option to apply PCA preprocessing.
+-->
+
 {% block title %}Generated Images{% endblock %}
 
 {% block content %}
 <div class="container">
+    <!-- Page title for the generated images section -->
     <h1 class="page-title">Generated Images</h1>
 
     <!-- Original Image Section -->
@@ -39,6 +48,7 @@
             {% csrf_token %}
             <input type="hidden" name="corrupted_image_id" value="{{ corrupted_image.id }}">
 
+            <!-- Dropdown to select imputation method -->
             <div class="form-group">
                 <label for="imputation_method">Imputation Method:</label>
                 <select id="imputation_method" name="imputation_method" class="form-control">
@@ -49,12 +59,14 @@
                 </select>
             </div>
 
+            <!-- Checkbox for applying PCA preprocessing -->
             <div class="form-group">
                 <label for="pca_preprocessing">
                     <input type="checkbox" id="pca_preprocessing" name="pca_preprocessing" value="true"> Apply PCA Preprocessing
                 </label>
             </div>
         
+            <!-- Submit button to generate imputed image -->
             <button type="submit" class="btn btn-primary btn-lg mt-3">Generate</button>
         </form>
     </div>

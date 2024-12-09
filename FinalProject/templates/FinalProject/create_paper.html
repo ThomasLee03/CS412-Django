@@ -1,20 +1,33 @@
 {% extends 'FinalProject/base.html' %}
 
+<!-- 
+# file: create_paper.html
+# author: Thomas Lee (tlee03@bu.edu), 11/15/2024
+# This template extends the base template and is used for creating a new paper. 
+# It includes a form to enter the paper's title and select images from various categories.
+-->
+
 {% block title %}Create Paper{% endblock %}
 
 {% block content %}
+<!-- Main header for the page -->
 <h1 class="mb-4">Create Paper</h1>
+
+<!-- Form to create a new paper -->
 <form method="post">
     {% csrf_token %}
     
-    <!-- Form Fields -->
+    <!-- Section for Paper Title -->
     <div class="form-group">
         <label for="id_title" class="h5">Paper Title</label>
+        <!-- The form fields are rendered here dynamically -->
         {{ form.as_p }}
     </div>
 
+    <!-- Section for selecting images -->
     <h2 class="mt-4 mb-3">Select Images</h2>
     <div class="image-selection">
+        <!-- Loop through the images to display them as checkboxes -->
         {% for image in images %}
         <div class="image-item">
             <input type="checkbox" name="images" value="{{ image.pk }}">
@@ -23,8 +36,10 @@
         {% endfor %}
     </div>
 
+    <!-- Section for selecting generated images -->
     <h2 class="mt-4 mb-3">Select Generated Images</h2>
     <div class="image-selection">
+        <!-- Loop through the generated images to display them as checkboxes -->
         {% for gen_image in generated_images %}
         <div class="image-item">
             <input type="checkbox" name="generated_images" value="{{ gen_image.pk }}">
@@ -33,8 +48,10 @@
         {% endfor %}
     </div>
 
+    <!-- Section for selecting corrupted images -->
     <h2 class="mt-4 mb-3">Select Corrupted Images</h2>
     <div class="image-selection">
+        <!-- Loop through the corrupted images to display them as checkboxes -->
         {% for corr_image in corrupted_images %}
         <div class="image-item">
             <input type="checkbox" name="corrupted_images" value="{{ corr_image.pk }}">
@@ -43,8 +60,10 @@
         {% endfor %}
     </div>
 
+    <!-- Section for selecting masks -->
     <h2 class="mt-4 mb-3">Select Masks</h2>
     <div class="image-selection">
+        <!-- Loop through the mask images to display them as checkboxes -->
         {% for mask in masks %}
         <div class="image-item">
             <input type="checkbox" name="masks" value="{{ mask.pk }}">
@@ -53,6 +72,7 @@
         {% endfor %}
     </div>
 
+    <!-- Submit button to create the paper -->
     <button type="submit" class="btn btn-primary mt-4">Create</button>
 </form>
 {% endblock %}

@@ -1,62 +1,94 @@
 {% extends 'FinalProject/base.html' %}
 
+<!-- 
+# file: edit_paper.html
+# author: Thomas Lee (tlee03@bu.edu), 12/9/2024
+# This template extends the base template and is used for editing an existing paper.
+# It includes a form to edit the paper's title and select images from various categories such as
+# images, generated images, corrupted images, and masks, with checkboxes for selecting and 
+# linking these images to the paper.
+-->
+
 {% block title %}Edit Paper{% endblock %}
 {% load custom_filters %}
 
 {% block content %}
+<!-- Main header displaying the title of the paper being edited -->
 <h1 class="mb-4">Edit Paper: {{ paper.title }}</h1>
+
+<!-- Form to edit paper details, including title and associated images -->
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
+    
+    <!-- Section for editing the paper's title -->
     <div class="form-group">
         <label for="id_title" class="h5">Paper Title</label>
+        <!-- Render form fields dynamically -->
         {{ form.as_p }}
     </div>
 
+    <!-- Section for selecting images -->
     <h3 class="mt-4 mb-3">Images</h3>
     <div class="image-section">
+        <!-- Loop through available images and allow selection -->
         {% for image in images %}
             <div class="image-item">
+                <!-- Checkbox to select image, with pre-check if image is linked -->
                 <input type="checkbox" name="images" value="{{ image.id }}" 
                     {% if linked_images and image.id in linked_images %}checked{% endif %}>
+                <!-- Display the image title and the image itself -->
                 <label>{{ image }}</label><br>
                 <img src="{{ image.image_file.url }}" alt="Image {{ image.id }}" class="img-fluid"><br>
             </div>
         {% endfor %}
     </div>
 
+    <!-- Section for selecting generated images -->
     <h3 class="mt-4 mb-3">Generated Images</h3>
     <div class="image-section">
+        <!-- Loop through available generated images and allow selection -->
         {% for gen_image in generated_images %}
             <div class="image-item">
+                <!-- Checkbox to select generated image, with pre-check if image is linked -->
                 <input type="checkbox" name="generated_images" value="{{ gen_image.id }}" 
                     {% if linked_generated_images and gen_image.id in linked_generated_images %}checked{% endif %}>
+                <!-- Display the generated image -->
                 <img src="{{ gen_image.image_file.url }}" alt="Generated Image {{ gen_image.id }}" class="img-fluid"><br>
             </div>
         {% endfor %}
     </div>
 
+    <!-- Section for selecting corrupted images -->
     <h3 class="mt-4 mb-3">Corrupted Images</h3>
     <div class="image-section">
+        <!-- Loop through available corrupted images and allow selection -->
         {% for corr_image in corrupted_images %}
             <div class="image-item">
+                <!-- Checkbox to select corrupted image, with pre-check if image is linked -->
                 <input type="checkbox" name="corrupted_images" value="{{ corr_image.id }}" 
                     {% if linked_corrupted_images and corr_image.id in linked_corrupted_images %}checked{% endif %}>
+                <!-- Display the corrupted image -->
                 <img src="{{ corr_image.corrupted_file.url }}" alt="Corrupted Image {{ corr_image.id }}" class="img-fluid"><br>
             </div>
         {% endfor %}
     </div>
 
+    <!-- Section for selecting masks -->
     <h3 class="mt-4 mb-3">Masks</h3>
     <div class="image-section">
+        <!-- Loop through available mask images and allow selection -->
         {% for mask in masks %}
             <div class="image-item">
+                <!-- Checkbox to select mask, with pre-check if mask is linked -->
                 <input type="checkbox" name="masks" value="{{ mask.id }}" 
                     {% if linked_masks and mask.id in linked_masks %}checked{% endif %}>
+                <!-- Display the mask image -->
                 <img src="{{ mask.mask_file.url }}" alt="Mask {{ mask.id }}" class="img-fluid"><br>
             </div>
         {% endfor %}
     </div>
 
+    <!-- Submit button to save the paper's changes -->
     <button type="submit" class="btn btn-primary mt-4">Save</button>
 </form>
 {% endblock %}

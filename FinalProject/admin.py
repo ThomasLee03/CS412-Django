@@ -16,10 +16,6 @@ from .models import (
     PaperWithMask, 
     PaperWithCorruptedImage
 )
-# Register your models here.
-class PaperAdmin(admin.ModelAdmin):
-    list_display = ['title', 'time_created']
-    filter_horizontal = ['images', 'generated_images', 'masks', 'corrupted_images']
 
 admin.site.register(Researcher)
 admin.site.register(Image)

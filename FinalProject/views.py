@@ -1,3 +1,12 @@
+# file: views.py
+# author: Thomas Lee (tlee03@bu.edu), 11/22/2024
+# This file contains the views for handling image processing tasks in the research project.
+# It includes various imputation methods such as SVD-based, PCA-based, and total variation inpainting,
+# and provides functionality for working with images, masks, corrupted images, and papers. 
+# Views for uploading, selecting, and comparing imputed images, as well as displaying the results, 
+# are also included. The views are connected to the models and handle the logic for processing 
+# and visualizing imputed images.
+
 from statistics import mode
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -35,6 +44,16 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 import cvxpy as cp
+import matplotlib
+matplotlib.use('Agg')  # Use the 'Agg' backend for non-GUI use
+import matplotlib.pyplot as plt
+import io
+import base64
+from io import BytesIO
+from collections import defaultdict
+
+from sklearn.decomposition import PCA
+
 def svd_imputation(M, mask, rank=50, max_iters=100, tol=1e-4):
     """
     Perform SVD-based imputation to fill in missing pixels in an image.
@@ -89,6 +108,25 @@ def svd_imputation(M, mask, rank=50, max_iters=100, tol=1e-4):
     return M
 
 def PCAbestSSIMPSNR(corrupted_image_array, original_image_array, corrupted_image_mat, mask):
+    """
+    This function applies Singular Value Decomposition (SVD)-based imputation to the corrupted image matrix 
+    and evaluates the imputation quality using Peak Signal-to-Noise Ratio (PSNR) and Structural Similarity Index 
+    (SSIM) at different ranks. It tracks the best rank based on PSNR and SSIM values, and returns the 
+    best imputed image along with the corresponding PSNR and SSIM values at each rank.
+
+    Parameters:
+    - corrupted_image_array: 3D NumPy array representing the corrupted image (height x width x channels).
+    - original_image_array: 3D NumPy array representing the original image (height x width x channels).
+    - corrupted_image_mat: 2D NumPy array (height x width) of the corrupted image for imputation.
+    - mask: 2D NumPy array (height x width), where 1 indicates known pixels and 0 indicates corrupted pixels.
+
+    Returns:
+    - MPSNRbest: The imputed image with the best PSNR value.
+    - MSSIMbest: The imputed image with the best SSIM value.
+    - rankL: List of ranks used during imputation.
+    - PSNRL: List of PSNR values corresponding to each rank.
+    - SSIML: List of SSIM values corresponding to each rank.
+    """
     rankL = []
     PSNRL = []
     SSIML = []
@@ -209,8 +247,8 @@ def column_imputation(image_array, mask_array, impute_strategy="mean"):
     # Clip values to valid image range and convert to uint8
     image_array = np.clip(image_array, 0, 255).astype(np.uint8)
     return image_array
+
 # PCA-based Imputation Function
-from sklearn.decomposition import PCA
 def pca_imputation(M, n_components=50):
     """
     Perform PCA-based imputation to reduce and reconstruct the image.
@@ -241,15 +279,7 @@ def pca_imputation(M, n_components=50):
 
     return np.clip(M_pca, 0, 255).astype(np.uint8)
 
-
-
-import matplotlib
-matplotlib.use('Agg')  # Use the 'Agg' backend for non-GUI use
-import matplotlib.pyplot as plt
-import io
-import base64
-from io import BytesIO
-from collections import defaultdict
+#generates the graphs to compare the different kinds of imputation methods via the PSNR and SSIm value
 def imputation_comparison(request):
     # Get the researcher profile for the logged-in user
     researcher = request.user.researcher_profile
@@ -353,6 +383,13 @@ def preprocess_with_imputation(M, mask, impute_strategy='mean'):
 
 
 class ImputeImageView(LoginRequiredMixin, FormView):
+    """
+    View to handle the image imputation process. 
+    It takes the selected image and imputation method from the form and applies the 
+    imputation algorithm (e.g., PCA, Total Variation, column-wise imputation).
+    The view calculates PSNR and SSIM to evaluate the quality of the imputation 
+    and displays the imputed image, along with PSNR, SSIM values, and any relevant graphs.
+    """
     template_name = "FinalProject/select_image.html"
     form_class = ImputeImageForm
     success_url = reverse_lazy("dashboard")  # Redirect after successful imputation
@@ -365,6 +402,14 @@ class ImputeImageView(LoginRequiredMixin, FormView):
         kwargs['user'] = self.request.user  # Pass the logged-in user to the form
         return kwargs
     def form_valid(self, form):
+        """
+        Called when the form is submitted with valid data.
+        It retrieves the selected original image and mask, applies the imputation method, 
+        and generates the imputed image. It also calculates PSNR and SSIM values 
+        to assess the quality of the imputed image.
+        Depending on the imputation method, it may apply PCA, Total Variation, or 
+        column-wise imputation, and save the results.
+        """
         # Get selected original image and imputation method
         original_image = form.cleaned_data["original_image"]
         mask = original_image.mask
@@ -651,6 +696,20 @@ class ImputeImageView(LoginRequiredMixin, FormView):
             )
 
 def apply_imputation(request):
+    """
+    Handles the imputation of a corrupted image based on the selected imputation method.
+    This method:
+    - Retrieves the corrupted image and the original image associated with it.
+    - Applies the selected imputation method (e.g., PCA, Total Variation, or column-wise imputation).
+    - Computes the PSNR and SSIM values to evaluate the quality of the imputed image.
+    - Saves the imputed image, along with the corresponding PSNR and SSIM values.
+    - Renders the results page to display the imputed image and performance metrics.
+
+    The imputation methods include:
+    - PCA-based imputation (with or without preprocessing)
+    - Total Variation inpainting
+    - Column-wise imputation (mean, median, or mode)
+    """
     if request.method == "POST":
         form = ImputationMethodForm(request.POST)
         if form.is_valid():
@@ -759,44 +818,85 @@ def apply_imputation(request):
                     },
                 )
             elif pca_preprocessing:
-                # Apply PCA reconstruction to the imputed image
                 imputed_image = column_imputation(corrupted_image_array, mask_array, imputation_method)
 
                 # If PCA preprocessing is selected, apply PCA
-                imputed_image = pca_imputation(imputed_image, 50)
 
+                MPSNRbest, MSSIMbest, rankL, PSNRL, SSIML = PCAbestSSIMPSNR(corrupted_image_array, original_image_array, imputed_image, mask_array)
+                # Save the PSNR-based imputed image
+                psnr_buffer = BytesIO()
+                psnr_image = PILImage.fromarray(MPSNRbest)
+                psnr_image.save(psnr_buffer, format="PNG")
+                psnr_content_file = ContentFile(psnr_buffer.getvalue(), name="PCA_PSNR_imputed.png")
 
-                # Calculate PSNR and SSIM for the PCA-reconstructed image
-                psnr_value = PSNR(np.array(PILImage.open(original_image.image_file)), imputed_image)
-                ssim_value = compute_color_ssim(np.array(PILImage.open(original_image.image_file)), imputed_image)
+                # Calculate PSNR and SSIM for PSNR best image
+                psnr_value = PSNR(np.array(PILImage.open(original_image.image_file)), MPSNRbest)
+                ssim_value_psnr = compute_color_ssim(np.array(PILImage.open(original_image.image_file)), MPSNRbest)
 
-                # Save the PCA-reconstructed image
-                buffer = BytesIO()
-                pca_image = PILImage.fromarray(imputed_image)
-                pca_image.save(buffer, format="PNG")
-                content_file = ContentFile(buffer.getvalue(), name="PCA_imputed.png")
-
-                # Save the imputed image instance
-                imputed_image_instance = ImageGenerated.objects.create(
-                    image_file=content_file,
-                    imputation_method=f"{imputation_method} + PCA",
+                psnr_imputed_image_instance = ImageGenerated.objects.create(
+                    image_file=psnr_content_file,
+                    imputation_method=f"{imputation_method} + PCA_PSNR",
+                    image = original_image,
                     researcher=original_image.researcher,
-                    ssim_value=ssim_value,
-                    image=original_image,
+                    ssim_value=ssim_value_psnr,
                     psnr_value=psnr_value
                 )
 
-                # Render the results page for PCA preprocessing
+                # Save the SSIM-based imputed image
+                ssim_buffer = BytesIO()
+                ssim_image = PILImage.fromarray(MSSIMbest)
+                ssim_image.save(ssim_buffer, format="PNG")
+                ssim_content_file = ContentFile(ssim_buffer.getvalue(), name="PCA_SSIM_imputed.png")
+
+                # Calculate PSNR and SSIM for SSIM best image
+                psnr_value_ssim = PSNR(np.array(PILImage.open(original_image.image_file)), MSSIMbest)
+                ssim_value_ssim = compute_color_ssim(np.array(PILImage.open(original_image.image_file)), MSSIMbest)
+
+                ssim_imputed_image_instance = ImageGenerated.objects.create(
+                    image_file=ssim_content_file,
+                    imputation_method=f"{imputation_method} + PCA_SSIM",
+                    image=original_image,
+                    researcher=original_image.researcher,
+                    ssim_value=ssim_value_ssim,
+                    psnr_value=psnr_value_ssim
+                )
+
+                # Generate the two separate plots for PCA convergence (PSNR and SSIM vs Rank)
+                fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))  # Adjusted the figure size for better fitting
+
+                # PSNR Plot
+                ax1.plot(rankL, PSNRL, label="PSNR", color='blue', marker='o')
+                ax1.set_xlabel("PCA Rank")
+                ax1.set_ylabel("PSNR")
+                ax1.set_title("PSNR vs. PCA Rank")
+                ax1.legend()
+
+                # SSIM Plot
+                ax2.plot(rankL, SSIML, label="SSIM", color='green', marker='x')
+                ax2.set_xlabel("PCA Rank")
+                ax2.set_ylabel("SSIM")
+                ax2.set_title("SSIM vs. PCA Rank")
+                ax2.legend()
+
+                # Save the plots as PNG and convert to base64
+                img_buf = io.BytesIO()
+                plt.savefig(img_buf, format='png')
+                img_buf.seek(0)
+                img_str = base64.b64encode(img_buf.getvalue()).decode('utf8')
+
+                # Render the results page with the plots and images
                 return render(
-                    request,
+                    self.request,
                     "FinalProject/imputed_image.html",
                     {
                         "original_image": original_image,
                         "corrupted_image": corrupted_image,
-                        "imputed_image": imputed_image_instance,
-                        "imputation_method": f"{imputation_method} + PCA",
+                        "psnr_imputed_image": psnr_imputed_image_instance,
+                        "ssim_imputed_image": ssim_imputed_image_instance,
+                        "imputation_method": "PCA",
                         "psnr_value": psnr_value,
-                        "ssim_value": ssim_value,
+                        "ssim_value": ssim_value_ssim,
+                        "pca_plot": img_str,  # Pass the base64 plot string to the template
                     },
                 )
             elif imputation_method == "total_variation":
@@ -899,7 +999,7 @@ def apply_imputation(request):
 
     return redirect("import_image")
 
-
+# View for displaying the results of the imputation process for a given corrupted image.  
 class ImputedImageDetailView(LoginRequiredMixin, DetailView):
     def get_login_url(self) -> str:
         '''return the url of the login page'''
@@ -936,7 +1036,7 @@ class ImageGeneratedDeleteView(LoginRequiredMixin, DeleteView):
         researcher = self.request.user.researcher_profile
         return ImageGenerated.objects.filter(researcher=researcher)
 
-
+# CreateView for ImageGenerated
 class ImputationCreateView(LoginRequiredMixin, CreateView):
     def get_login_url(self) -> str:
         '''return the url of the login page'''
@@ -969,7 +1069,7 @@ class ImputationCreateView(LoginRequiredMixin, CreateView):
             )
         )
     
-
+# Displays the paper
 class PaperDetailView(LoginRequiredMixin, DetailView):
     def get_login_url(self) -> str:
         '''return the url of the login page'''
@@ -1053,6 +1153,7 @@ class ImageImportCreateView(LoginRequiredMixin, CreateView):
         self.success_url = reverse_lazy("view_generated_image", kwargs={"pk": original_image.pk})
         return super().form_valid(form)
 
+# view to handle filtering the papers created by all researchers
 class PaperSearchView(LoginRequiredMixin, ListView):
     def get_login_url(self) -> str:
         '''return the url of the login page'''
@@ -1111,7 +1212,10 @@ class ImageGeneratedDetailView(LoginRequiredMixin, DetailView):
         })
         return context
 
-
+# Class to handle creating a Paper object.
+# The view allows the logged-in user to create the details of a paper, including
+# adding or removing associated images, generated images, corrupted images, and masks.
+# It ensures that the paper being updated is linked to the current user through their researcher profile.
 class PaperCreateView(LoginRequiredMixin, CreateView):
     def get_login_url(self) -> str:
         '''return the url of the login page'''
@@ -1125,8 +1229,8 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         researcher = self.request.user.researcher_profile
         context["images"] = Image.objects.filter(researcher=researcher)
         context["generated_images"] = ImageGenerated.objects.filter(researcher=researcher)
-        context["corrupted_images"] = CorruptedImage.objects.all()
-        context["masks"] = Mask.objects.all()
+        context["corrupted_images"] = CorruptedImage.objects.filter(researcher=researcher)
+        context["masks"] = Mask.objects.filter(researcher=researcher)
         return context
 
     def form_valid(self, form):
@@ -1178,6 +1282,11 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("dashboard")
 
+
+# Class to handle updating an existing Paper object.
+# The view allows the logged-in user to update the details of a paper, including
+# adding or removing associated images, generated images, corrupted images, and masks.
+# It ensures that the paper being updated is linked to the current user through their researcher profile.
 class PaperUpdateView(LoginRequiredMixin, UpdateView):
     def get_login_url(self) -> str:
         '''return the url of the login page'''
@@ -1252,72 +1361,90 @@ class PaperUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-
-
-
-
-
+# Class to handle the deletion of a Paper object.
 class PaperDeleteView(LoginRequiredMixin, DeleteView):
+    # Returns the URL of the login page if the user is not authenticated.
     def get_login_url(self) -> str:
         '''return the url of the login page'''
         return reverse('login2')
-    model = Paper
-    template_name = "FinalProject/delete_paper.html"
-    success_url = reverse_lazy("dashboard")
 
+    model = Paper  # The model associated with this view (Paper).
+    template_name = "FinalProject/delete_paper.html"  # Template to render for deleting a paper.
+    success_url = reverse_lazy("dashboard")  # URL to redirect after the paper is deleted.
+
+    # Filters the papers by the researcher associated with the logged-in user.
     def get_queryset(self):
-        researcher = self.request.user.researcher_profile
-        return Paper.objects.filter(paperwithresearcher__researcher=researcher).distinct()
+        researcher = self.request.user.researcher_profile  # Get the researcher profile for the logged-in user.
+        return Paper.objects.filter(paperwithresearcher__researcher=researcher).distinct()  # Return papers linked to the researcher.
 
 
-
+# Class to display a list of CorruptedImage objects.
 class CorruptedImageListView(LoginRequiredMixin, ListView):
+    # Returns the URL of the login page if the user is not authenticated.
     def get_login_url(self) -> str:
         '''return the url of the login page'''
         return reverse('login2')
-    model = CorruptedImage
-    template_name = 'FinalProject/corrupted_image_list.html'
-    context_object_name = 'corrupted_images'
 
+    model = CorruptedImage  # The model associated with this view (CorruptedImage).
+    template_name = 'FinalProject/corrupted_image_list.html'  # Template to render the list of corrupted images.
+    context_object_name = 'corrupted_images'  # Name for the context variable passed to the template.
+
+
+# Class to display details of a specific CorruptedImage object.
 class CorruptedImageDetailView(LoginRequiredMixin, DetailView):
+    # Returns the URL of the login page if the user is not authenticated.
     def get_login_url(self) -> str:
         '''return the url of the login page'''
         return reverse('login2')
-    model = CorruptedImage
-    template_name = 'FinalProject/corrupted_image_detail.html'
-    context_object_name = 'corrupted_image'
 
+    model = CorruptedImage  # The model associated with this view (CorruptedImage).
+    template_name = 'FinalProject/corrupted_image_detail.html'  # Template to render the detail view.
+    context_object_name = 'corrupted_image'  # Name for the context variable passed to the template.
+
+
+# Class to display a list of Mask objects.
 class MaskListView(LoginRequiredMixin, ListView):
+    # Returns the URL of the login page if the user is not authenticated.
     def get_login_url(self) -> str:
         '''return the url of the login page'''
         return reverse('login2')
-    model = Mask
-    template_name = 'FinalProject/mask_list.html'
-    context_object_name = 'masks'
 
+    model = Mask  # The model associated with this view (Mask).
+    template_name = 'FinalProject/mask_list.html'  # Template to render the list of masks.
+    context_object_name = 'masks'  # Name for the context variable passed to the template.
+
+
+# Class to display details of a specific Mask object.
 class MaskDetailView(LoginRequiredMixin, DetailView):
+    # Returns the URL of the login page if the user is not authenticated.
     def get_login_url(self) -> str:
         '''return the url of the login page'''
         return reverse('login2')
-    model = Mask
-    template_name = 'FinalProject/mask_detail.html'
-    context_object_name = 'mask'
+
+    model = Mask  # The model associated with this view (Mask).
+    template_name = 'FinalProject/mask_detail.html'  # Template to render the detail view.
+    context_object_name = 'mask'  # Name for the context variable passed to the template.
 
 
+# Class to display a dashboard for the logged-in user, showing papers, images, generated images, corrupted images, and masks.
 class DashboardView(LoginRequiredMixin, ListView):
+    # Returns the URL of the login page if the user is not authenticated.
     def get_login_url(self) -> str:
         '''return the url of the login page'''
         return reverse('login2')
-    template_name = "FinalProject/dashboard.html"
-    context_object_name = "papers"
 
+    template_name = "FinalProject/dashboard.html"  # Template for the dashboard view.
+    context_object_name = "papers"  # Name for the context variable passed to the template.
+
+    # Filters papers by the researcher associated with the logged-in user.
     def get_queryset(self):
-        researcher = self.request.user.researcher_profile
-        return Paper.objects.filter(paperwithresearcher__researcher=researcher)
+        researcher = self.request.user.researcher_profile  # Get the researcher profile for the logged-in user.
+        return Paper.objects.filter(paperwithresearcher__researcher=researcher)  # Return papers linked to the researcher.
 
+    # Adds additional context data, such as images, generated images, corrupted images, and masks for the researcher.
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        researcher = self.request.user.researcher_profile
+        context = super().get_context_data(**kwargs)  # Get the base context data.
+        researcher = self.request.user.researcher_profile  # Get the researcher profile for the logged-in user.
 
         # Get images uploaded by the researcher
         context["images"] = Image.objects.filter(researcher=researcher)
@@ -1336,7 +1463,3 @@ class DashboardView(LoginRequiredMixin, ListView):
         ).distinct()
 
         return context
-
-
-
-

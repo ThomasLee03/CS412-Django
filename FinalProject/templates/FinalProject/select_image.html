@@ -3,12 +3,20 @@
 {% block title %}Select Image for Imputation{% endblock %}
 
 {% block content %}
+<!-- 
+# file: select_image.html
+# author: Thomas Lee (tlee03@bu.edu), 12/9/2024
+# This template allows users to select an image for imputation (to recover from corruption).
+# The user can choose the original image, the imputation method, and whether to apply PCA preprocessing.
+-->
+
 <h1>Select Image for Imputation</h1>
 
 <!-- Form to select the image for imputation -->
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     
+    <!-- Selecting the original image (tied to the corrupted image) -->
     <h3>Select Original Image</h3>
     <div class="image-section">
         {% for image in form.original_image.field.queryset %}
@@ -25,6 +33,7 @@
         {% endfor %}
     </div>
 
+    <!-- Selecting the imputation method to uncorrupt the corrupted image-->
     <h3>Select Imputation Method</h3>
     <div class="form-group">
         {{ form.imputation_method }}
@@ -43,4 +52,5 @@
 
 <!-- Back to Dashboard Button -->
 <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-4">Back to Dashboard</a>
+
 {% endblock %}

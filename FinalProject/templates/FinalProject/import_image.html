@@ -1,15 +1,30 @@
 {% extends 'FinalProject/base.html' %}
 
+<!-- 
+# file: import_image.html
+# author: Thomas Lee (tlee03@bu.edu), 12/9/2024
+# This template extends the base template and is used for uploading an image.
+# It includes a form to upload the original image file, allowing users to select 
+# and submit an image to the server.
+-->
+
 {% block title %}Upload Image{% endblock %}
 
 {% block content %}
+  <!-- Main header for the page -->
   <h1 class="mb-4">Upload Image</h1>
+
+  <!-- Form to upload the image file -->
   <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+    {% csrf_token %}  <!-- CSRF token to prevent cross-site request forgery -->
+    
+    <!-- Section for uploading the original image -->
     <div class="form-group">
       <label for="id_image_file" class="h5">Original Image</label>
-      {{ form.image_file }}  <!-- Make sure this matches the field name in the form -->
+      {{ form.image_file }}  <!-- Render the file input field for the image -->
     </div>
+
+    <!-- Submit button to upload the image -->
     <button type="submit" class="btn btn-primary mt-4">Upload</button>
   </form>
   

@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'hw', ##new app!!!
     'quotes',
     'restaurant',
-    "formdata", # new app
     'blog',
     'mini_fb',
     'marathon_analytics',
