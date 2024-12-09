@@ -14,7 +14,7 @@ urlpatterns = [
     path('search/', views.PaperSearchView.as_view(), name='paper_search'),
     path("import-image/", views.ImageImportCreateView.as_view(), name="import_image"),
     path("generated-image/<int:pk>/", views.ImageGeneratedDetailView.as_view(), name="view_generated_image"),
-    path('logout/', TemplateView.as_view(template_name='finalProject/logout_confirm.html'), name='logout_confirm'),
+    path('logout/', TemplateView.as_view(template_name='FinalProject/logout_confirm.html'), name='logout_confirm'),
     path('logout/confirm/', LogoutView.as_view(next_page='login2'), name='logoutFP'),
     path('login/', views.login_view, name='login2'),
     path("imputation/create/", views.ImputationCreateView.as_view(), name="create_imputation"),

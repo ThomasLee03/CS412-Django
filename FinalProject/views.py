@@ -311,7 +311,7 @@ def imputation_comparison(request):
             })
 
     # Pass the generated bar graphs to the template
-    return render(request, 'finalProject/imputation_comparison.html', {'bar_graphs': bar_graphs})
+    return render(request, 'FinalProject/imputation_comparison.html', {'bar_graphs': bar_graphs})
 
 
 def preprocess_with_imputation(M, mask, impute_strategy='mean'):
@@ -353,7 +353,7 @@ def preprocess_with_imputation(M, mask, impute_strategy='mean'):
 
 
 class ImputeImageView(LoginRequiredMixin, FormView):
-    template_name = "finalProject/select_image.html"
+    template_name = "FinalProject/select_image.html"
     form_class = ImputeImageForm
     success_url = reverse_lazy("dashboard")  # Redirect after successful imputation
     def get_login_url(self) -> str:
@@ -449,7 +449,7 @@ class ImputeImageView(LoginRequiredMixin, FormView):
             # Render the results page with the plots and images
             return render(
                 self.request,
-                "finalProject/imputed_image.html",
+                "FinalProject/imputed_image.html",
                 {
                     "original_image": original_image,
                     "corrupted_image": corrupted_image,
@@ -511,7 +511,7 @@ class ImputeImageView(LoginRequiredMixin, FormView):
             # Render the results page
             return render(
                 self.request,
-                "finalProject/imputed_image.html",
+                "FinalProject/imputed_image.html",
                 {
                     "original_image": original_image,
                     "corrupted_image": corrupted_image,
@@ -592,7 +592,7 @@ class ImputeImageView(LoginRequiredMixin, FormView):
             # Render the results page with the plots and images
             return render(
                 self.request,
-                "finalProject/imputed_image.html",
+                "FinalProject/imputed_image.html",
                 {
                     "original_image": original_image,
                     "corrupted_image": corrupted_image,
@@ -639,7 +639,7 @@ class ImputeImageView(LoginRequiredMixin, FormView):
             # Render the results page
             return render(
                 self.request,
-                "finalProject/imputed_image.html",
+                "FinalProject/imputed_image.html",
                 {
                     "original_image": original_image,
                     "corrupted_image": corrupted_image,
@@ -746,7 +746,7 @@ def apply_imputation(request):
                 # Render the results page with the images and graphs
                 return render(
                     request,
-                    "finalProject/imputed_image.html",
+                    "FinalProject/imputed_image.html",
                     {
                         "original_image": original_image,
                         "corrupted_image": corrupted_image,
@@ -789,7 +789,7 @@ def apply_imputation(request):
                 # Render the results page for PCA preprocessing
                 return render(
                     request,
-                    "finalProject/imputed_image.html",
+                    "FinalProject/imputed_image.html",
                     {
                         "original_image": original_image,
                         "corrupted_image": corrupted_image,
@@ -849,7 +849,7 @@ def apply_imputation(request):
 
                 # Render the results page
                 return render(
-                    "finalProject/imputed_image.html",
+                    "FinalProject/imputed_image.html",
                     {
                         "original_image": original_image,
                         "corrupted_image": corrupted_image,
@@ -886,7 +886,7 @@ def apply_imputation(request):
                 # Render the results page for non-PCA imputation
                 return render(
                     request,
-                    "finalProject/imputed_image.html",
+                    "FinalProject/imputed_image.html",
                     {
                         "original_image": original_image,
                         "corrupted_image": corrupted_image,
@@ -905,7 +905,7 @@ class ImputedImageDetailView(LoginRequiredMixin, DetailView):
         '''return the url of the login page'''
         return reverse('login2')
     model = ImageGenerated
-    template_name = "finalProject/imputed_image.html"
+    template_name = "FinalProject/imputed_image.html"
     context_object_name = "imputed_image"
 
 # DeleteView for Image
@@ -914,7 +914,7 @@ class ImageDeleteView(LoginRequiredMixin, DeleteView):
         '''return the url of the login page'''
         return reverse('login2')
     model = Image
-    template_name = "finalProject/delete_image.html"
+    template_name = "FinalProject/delete_image.html"
     success_url = reverse_lazy("dashboard")  # Redirect to the dashboard after deletion
 
     def get_queryset(self):
@@ -928,7 +928,7 @@ class ImageGeneratedDeleteView(LoginRequiredMixin, DeleteView):
         '''return the url of the login page'''
         return reverse('login2')
     model = ImageGenerated
-    template_name = "finalProject/delete_generated_image.html"
+    template_name = "FinalProject/delete_generated_image.html"
     success_url = reverse_lazy("dashboard")  # Redirect to the dashboard after deletion
 
     def get_queryset(self):
@@ -943,7 +943,7 @@ class ImputationCreateView(LoginRequiredMixin, CreateView):
         return reverse('login2')
     model = ImageGenerated
     form_class = ImputationMethodForm
-    template_name = "finalProject/imputation_form.html"
+    template_name = "FinalProject/imputation_form.html"
 
     def form_valid(self, form):
         # Get the corrupted image from the form data
@@ -975,7 +975,7 @@ class PaperDetailView(LoginRequiredMixin, DetailView):
         '''return the url of the login page'''
         return reverse('login2')
     model = Paper
-    template_name = 'finalProject/view_paper.html'
+    template_name = 'FinalProject/view_paper.html'
     context_object_name = 'paper'
 
     def get_context_data(self, **kwargs):
@@ -996,7 +996,7 @@ def login_view(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, 'finalProject/login.html', {'form': form})
+    return render(request, 'FinalProject/login.html', {'form': form})
 
 def logout_view(request):
     logout(request)
@@ -1009,7 +1009,7 @@ class ImageImportCreateView(LoginRequiredMixin, CreateView):
         return reverse('login2')
     model = Image
     form_class = UploadImageForm
-    template_name = "finalProject/import_image.html"
+    template_name = "FinalProject/import_image.html"
 
     def form_valid(self, form):
         # Ensure the user has a related Researcher profile
@@ -1058,7 +1058,7 @@ class PaperSearchView(LoginRequiredMixin, ListView):
         '''return the url of the login page'''
         return reverse('login2')
     model = Paper
-    template_name = 'finalProject/paper_search.html'
+    template_name = 'FinalProject/paper_search.html'
     context_object_name = 'papers'
     paginate_by = 10
 
@@ -1098,7 +1098,7 @@ class ImageGeneratedDetailView(LoginRequiredMixin, DetailView):
         '''return the url of the login page'''
         return reverse('login2')
     model = Image
-    template_name = "finalProject/generated_image_display.html"
+    template_name = "FinalProject/generated_image_display.html"
     context_object_name = "original_image"
 
     def get_context_data(self, **kwargs):
@@ -1118,7 +1118,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         return reverse('login2')
     model = Paper
     form_class = CreatePaperForm
-    template_name = "finalProject/create_paper.html"
+    template_name = "FinalProject/create_paper.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1184,7 +1184,7 @@ class PaperUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('login2')
     model = Paper
     form_class = CreatePaperForm
-    template_name = "finalProject/edit_paper.html"
+    template_name = "FinalProject/edit_paper.html"
 
     def get_success_url(self):
         # Return the URL to the paper detail view after successful update
@@ -1262,7 +1262,7 @@ class PaperDeleteView(LoginRequiredMixin, DeleteView):
         '''return the url of the login page'''
         return reverse('login2')
     model = Paper
-    template_name = "finalProject/delete_paper.html"
+    template_name = "FinalProject/delete_paper.html"
     success_url = reverse_lazy("dashboard")
 
     def get_queryset(self):
@@ -1276,7 +1276,7 @@ class CorruptedImageListView(LoginRequiredMixin, ListView):
         '''return the url of the login page'''
         return reverse('login2')
     model = CorruptedImage
-    template_name = 'finalProject/corrupted_image_list.html'
+    template_name = 'FinalProject/corrupted_image_list.html'
     context_object_name = 'corrupted_images'
 
 class CorruptedImageDetailView(LoginRequiredMixin, DetailView):
@@ -1284,7 +1284,7 @@ class CorruptedImageDetailView(LoginRequiredMixin, DetailView):
         '''return the url of the login page'''
         return reverse('login2')
     model = CorruptedImage
-    template_name = 'finalProject/corrupted_image_detail.html'
+    template_name = 'FinalProject/corrupted_image_detail.html'
     context_object_name = 'corrupted_image'
 
 class MaskListView(LoginRequiredMixin, ListView):
@@ -1292,7 +1292,7 @@ class MaskListView(LoginRequiredMixin, ListView):
         '''return the url of the login page'''
         return reverse('login2')
     model = Mask
-    template_name = 'finalProject/mask_list.html'
+    template_name = 'FinalProject/mask_list.html'
     context_object_name = 'masks'
 
 class MaskDetailView(LoginRequiredMixin, DetailView):
@@ -1300,7 +1300,7 @@ class MaskDetailView(LoginRequiredMixin, DetailView):
         '''return the url of the login page'''
         return reverse('login2')
     model = Mask
-    template_name = 'finalProject/mask_detail.html'
+    template_name = 'FinalProject/mask_detail.html'
     context_object_name = 'mask'
 
 
@@ -1308,7 +1308,7 @@ class DashboardView(LoginRequiredMixin, ListView):
     def get_login_url(self) -> str:
         '''return the url of the login page'''
         return reverse('login2')
-    template_name = "finalProject/dashboard.html"
+    template_name = "FinalProject/dashboard.html"
     context_object_name = "papers"
 
     def get_queryset(self):
