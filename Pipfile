@@ -11,6 +11,7 @@ plotly = "*"
 scikit-learn = "*"
 cvxpy = "*"
 matplotlib = "*"
+scikit-image = "*"
 
 [dev-packages]
 
