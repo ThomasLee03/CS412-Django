@@ -29,7 +29,8 @@ urlpatterns = [
     path("blog/", include("blog.urls")),
     path('mini_fb/', include('mini_fb.urls')),
     path('marathon_analytics/', include('marathon_analytics.urls')),
-    path('voter_analytics/', include('voter_analytics.urls'))
+    path('voter_analytics/', include('voter_analytics.urls')),
+    path('FinalProject/', include('FinalProject.urls'))
 ] 
 
 urlpatterns +=  static(settings.STATIC_URL,
@@ -37,3 +38,6 @@ urlpatterns +=  static(settings.STATIC_URL,
 #adding media directory in the url section 
 urlpatterns +=  static(settings.MEDIA_URL,
     document_root = settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

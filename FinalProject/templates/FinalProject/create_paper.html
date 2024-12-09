@@ -1,0 +1,58 @@
+{% extends 'finalProject/base.html' %}
+
+{% block title %}Create Paper{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Create Paper</h1>
+<form method="post">
+    {% csrf_token %}
+    
+    <!-- Form Fields -->
+    <div class="form-group">
+        <label for="id_title" class="h5">Paper Title</label>
+        {{ form.as_p }}
+    </div>
+
+    <h2 class="mt-4 mb-3">Select Images</h2>
+    <div class="image-selection">
+        {% for image in images %}
+        <div class="image-item">
+            <input type="checkbox" name="images" value="{{ image.pk }}">
+            <img src="{{ image.image_file.url }}" alt="Image {{ image.pk }}" class="img-fluid">
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2 class="mt-4 mb-3">Select Generated Images</h2>
+    <div class="image-selection">
+        {% for gen_image in generated_images %}
+        <div class="image-item">
+            <input type="checkbox" name="generated_images" value="{{ gen_image.pk }}">
+            <img src="{{ gen_image.image_file.url }}" alt="Generated Image {{ gen_image.pk }}" class="img-fluid">
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2 class="mt-4 mb-3">Select Corrupted Images</h2>
+    <div class="image-selection">
+        {% for corr_image in corrupted_images %}
+        <div class="image-item">
+            <input type="checkbox" name="corrupted_images" value="{{ corr_image.pk }}">
+            <img src="{{ corr_image.corrupted_file.url }}" alt="Corrupted Image {{ corr_image.pk }}" class="img-fluid">
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2 class="mt-4 mb-3">Select Masks</h2>
+    <div class="image-selection">
+        {% for mask in masks %}
+        <div class="image-item">
+            <input type="checkbox" name="masks" value="{{ mask.pk }}">
+            <img src="{{ mask.mask_file.url }}" alt="Mask {{ mask.pk }}" class="img-fluid">
+        </div>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">Create</button>
+</form>
+{% endblock %}

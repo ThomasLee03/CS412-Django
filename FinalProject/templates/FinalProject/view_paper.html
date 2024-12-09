@@ -1,0 +1,13 @@
+{% extends "finalProject/base.html" %}
+
+{% block content %}
+  <h1>{{ paper.title }}</h1>
+  <div>
+    {{ processed_content|safe }}
+  </div>
+
+
+
+<a href="{% url 'edit_paper' paper.id %}" class="btn btn-primary">Edit Paper</a>
+<a href="{% url 'delete_paper' paper.pk %}" class="btn btn-danger btn-sm">Delete</a>
+{% endblock %}

@@ -67,7 +67,6 @@ class RestulDetailView(DetailView):
         #add the pie chart to the context
         fig = go.Pie(labels=x, values=y)
         pie_div = plotly.offline.plot({'data': [fig]}, auto_open = False, output_type = 'div')
-
         context['pie_div'] = pie_div
 
         #create a bar chart with the number of runners passed and who passed by

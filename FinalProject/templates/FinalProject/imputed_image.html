@@ -1,0 +1,71 @@
+{% extends "finalProject/base.html" %}
+
+{% block title %}Imputed Image{% endblock %}
+
+{% block content %}
+<h1>Imputed Image</h1>
+
+<h3>Original Image</h3>
+<img src="{{ original_image.image_file.url }}" alt="Original Image">
+
+<h3>Corrupted Image</h3>
+<img src="{{ corrupted_image.corrupted_file.url }}" alt="Corrupted Image">
+
+{% if imputation_method == "PCA" %}
+    <div>
+        <h3>Imputed Image (PSNR Optimization)</h3>
+        <img src="{{ psnr_imputed_image.image_file.url }}" alt="Imputed Image PSNR" class="img-fluid">
+        <p><strong>PSNR:</strong> {{ psnr_imputed_image.psnr_value }} dB</p>
+        <p><strong>SSIM:</strong> {{ psnr_imputed_image.ssim_value }}</p>
+    </div>
+
+    <div>
+        <h3>Imputed Image (SSIM Optimization)</h3>
+        <img src="{{ ssim_imputed_image.image_file.url }}" alt="Imputed Image SSIM" class="img-fluid">
+        <p><strong>PSNR:</strong> {{ psnr_imputed_image.psnr_value }} dB</p>
+        <p><strong>SSIM:</strong> {{ psnr_imputed_image.ssim_value }}</p>
+    </div>
+
+        <!-- Display the PCA convergence plot -->
+        <h3>PCA Convergence Graph</h3>
+        <div style="display: flex; justify-content: space-between; max-width: 100%; flex-wrap: wrap;">
+            <div style="width: 48%; max-width: 600px; overflow: hidden;">
+                <img src="data:image/png;base64,{{ pca_plot }}" alt="PCA Convergence Graph" style="width: 100%; height: auto;">
+            </div>
+        </div>
+
+{% elif "+" in imputation_method %}
+<div>
+    <h3>Imputed Image (PSNR Optimization)</h3>
+    <img src="{{ psnr_imputed_image.image_file.url }}" alt="Imputed Image PSNR" class="img-fluid">
+    <p><strong>PSNR:</strong> {{ psnr_imputed_image.psnr_value }} dB</p>
+    <p><strong>SSIM:</strong> {{ psnr_imputed_image.ssim_value }}</p>
+</div>
+
+<div>
+    <h3>Imputed Image (SSIM Optimization)</h3>
+    <img src="{{ ssim_imputed_image.image_file.url }}" alt="Imputed Image SSIM" class="img-fluid">
+    <p><strong>PSNR:</strong> {{ psnr_imputed_image.psnr_value }} dB</p>
+    <p><strong>SSIM:</strong> {{ psnr_imputed_image.ssim_value }}</p>
+</div>
+
+    <!-- Display the PCA convergence plot -->
+    <h3>PCA Convergence Graph</h3>
+    <div style="display: flex; justify-content: space-between; max-width: 100%; flex-wrap: wrap;">
+        <div style="width: 48%; max-width: 600px; overflow: hidden;">
+            <img src="data:image/png;base64,{{ pca_plot }}" alt="PCA Convergence Graph" style="width: 100%; height: auto;">
+        </div>
+    </div>
+{% else %}
+    <div>
+        <h3>Imputed Image ({{ imputation_method }})</h3>
+        <img src="{{ imputed_image.image_file.url }}" alt="Imputed Image" class="img-fluid">
+        <p><strong>Imputation Method:</strong> {{ imputation_method }}</p>
+        <p><strong>PSNR:</strong> {{ psnr_value }} dB</p>
+        <p><strong>SSIM:</strong> {{ ssim_value }}</p>
+    </div>
+{% endif %}
+
+<a href="{% url 'select_impute_image' %}" class="btn btn-secondary">Impute Another Image</a>
+<a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+{% endblock %}

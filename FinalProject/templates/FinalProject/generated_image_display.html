@@ -1,0 +1,65 @@
+{% extends "finalProject/base.html" %}
+
+{% block title %}Generated Images{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">Generated Images</h1>
+
+    <!-- Original Image Section -->
+    <div class="image-section">
+        <h2 class="image-title">Original Image</h2>
+        <img src="{{ original_image.image_file.url }}" alt="Original Image" class="img-fluid rounded shadow">
+    </div>
+
+    <!-- Corrupted Image Section -->
+    {% if corrupted_image %}
+    <div class="image-section">
+        <h2 class="image-title">Corrupted Image</h2>
+        <img src="{{ corrupted_image.corrupted_file.url }}" alt="Corrupted Image" class="img-fluid rounded shadow">
+    </div>
+    {% else %}
+    <p class="alert alert-warning">No corrupted image available.</p>
+    {% endif %}
+
+    <!-- Mask Section -->
+    {% if mask %}
+    <div class="image-section">
+        <h2 class="image-title">Mask</h2>
+        <img src="{{ mask.mask_file.url }}" alt="Mask Image" class="img-fluid rounded shadow">
+    </div>
+    {% else %}
+    <p class="alert alert-warning">No mask available.</p>
+    {% endif %}
+
+    <!-- Imputation Method Form -->
+    <div class="form-section">
+        <h3>Select an Imputation Method</h3>
+        <form method="post" action="{% url 'apply_imputation' %}">
+            {% csrf_token %}
+            <input type="hidden" name="corrupted_image_id" value="{{ corrupted_image.id }}">
+
+            <div class="form-group">
+                <label for="imputation_method">Imputation Method:</label>
+                <select id="imputation_method" name="imputation_method" class="form-control">
+                    <option value="mean">Mean</option>
+                    <option value="median">Median</option>
+                    <option value="mode">Mode</option>
+                    <option value="pca">PCA</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="pca_preprocessing">
+                    <input type="checkbox" id="pca_preprocessing" name="pca_preprocessing" value="true"> Apply PCA Preprocessing
+                </label>
+            </div>
+        
+            <button type="submit" class="btn btn-primary btn-lg mt-3">Generate</button>
+        </form>
+    </div>
+
+    <!-- Link to Import Another Image -->
+    <a href="{% url 'import_image' %}" class="btn btn-secondary btn-lg mt-3">Import Another Image</a>
+</div>
+{% endblock %}

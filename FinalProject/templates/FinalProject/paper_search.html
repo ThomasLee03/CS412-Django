@@ -1,0 +1,65 @@
+
+
+{% extends 'finalProject/base.html' %}
+
+{% block title %}Search Papers{% endblock %}
+
+{% block content %}
+<h1>Search and Filter Papers</h1>
+<form method="get">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" name="title" >
+    </div>
+    <div class="mb-3">
+        <label for="researcher" class="form-label">Researcher</label>
+        <input type="text" class="form-control" id="researcher" name="researcher">
+    </div>
+
+    <!-- Sorting options -->
+    <div class="mb-3">
+        <label for="order_by" class="form-label">Sort by</label>
+        <select class="form-control" name="order_by" id="order_by">
+            <option value="created_at" {% if request.GET.order_by == 'created_at' %}selected{% endif %}>Newest First</option>
+            <option value="date" {% if request.GET.order_by == 'date' %}selected{% endif %}>Oldest First</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<h2>Results</h2>
+{% if papers %}
+    <ul>
+        <!-- Display results -->
+        {% for paper in papers %}
+            <div class="paper">
+                <a href="{% url 'paper_detail' paper.pk %}">{{ paper.title }}</a> 
+                <p>Created at: {{ paper.time_created }}</p> <!-- Display creation date -->
+                <!-- Add other paper details here -->
+            </div>
+        {% endfor %}
+    </ul>
+
+    {% if is_paginated %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?{% if request.GET.title %}title={{ request.GET.title }}&{% endif %}
+                                  {% if request.GET.researcher %}researcher={{ request.GET.researcher }}&{% endif %}
+                                  order_by={{ request.GET.order_by }}&page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?{% if request.GET.title %}title={{ request.GET.title }}&{% endif %}
+                                  {% if request.GET.researcher %}researcher={{ request.GET.researcher }}&{% endif %}
+                                  order_by={{ request.GET.order_by }}&page={{ page_obj.next_page_number }}">Next</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+{% else %}
+    <p>No papers found.</p>
+{% endif %}
+{% endblock %}
+

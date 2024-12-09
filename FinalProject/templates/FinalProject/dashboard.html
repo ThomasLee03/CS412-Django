@@ -1,0 +1,96 @@
+{% extends "finalProject/base.html" %}
+{% load custom_filters %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Welcome, {{ request.user }}</h1>
+
+    <!-- Papers Section -->
+    <div class="papers-section">
+        <h2>Your Papers</h2>
+        <ul class="list-group">
+            {% for paper in papers %}
+                <li class="list-group-item">
+                    <a href="{% url 'paper_detail' paper.pk %}" class="text-decoration-none">
+                        {{ paper.title }}
+                    </a>
+                </li>
+            {% empty %}
+                <p>No papers found.</p>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Images Section -->
+    <div class="images-section mt-4">
+        <h2>Images</h2>
+        <div class="image-grid">
+            {% for image in images %}
+                <div class="image-item">
+                    {% if image.image_file %}
+                        <img src="{{ image.image_file.url }}" alt="Image {{ image.pk }}" class="img-fluid">
+                    {% else %}
+                        <p>No image file found for this image.</p>
+                    {% endif %}
+                    <form method="post" action="{% url 'delete_image' image.pk %}" class="mt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn">x</button>
+                    </form>
+                </div>
+            {% empty %}
+                <p>No images found.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Generated Images Section -->
+    <div class="generated-images-section mt-4">
+        <h2>Generated Images</h2>
+        <div class="image-grid">
+            {% for generated_image in generated_images %}
+            <div class="image-item">
+                Generated Image with {{ generated_image.imputation_method }} PSNR: {{ generated_image.psnr_value }} SSIM: {{ generated_image.ssim_value }}
+                <img src="{{ generated_image.image_file.url }}" alt="Generated Image {{ generated_image.pk }}" class="img-fluid">
+                
+                <form method="post" action="{% url 'delete_generated_image' generated_image.pk %}" class="mt-2">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn">x</button>
+                </form>
+            </div>
+            {% empty %}
+            <p>No generated images found.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Corrupted Images Section -->
+    <div class="corrupted-images-section mt-4">
+        <h2>Corrupted Images</h2>
+        <div class="image-grid">
+            {% for corrupted_image in corrupted_images %}
+            <div class="image-item">
+                <img src="{{ corrupted_image.corrupted_file.url }}" alt="Corrupted Image {{ corrupted_image.pk }}" class="img-fluid">
+            </div>
+            {% empty %}
+            <p>No corrupted images found.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Masks Section -->
+    <div class="masks-section mt-4">
+        <h2>Masks</h2>
+        <div class="image-grid">
+            {% for mask in masks %}
+            <div class="image-item">
+                <img src="{{ mask.mask_file.url }}" alt="Mask {{ mask.pk }}" class="img-fluid">
+            </div>
+            {% empty %}
+            <p>No masks found.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

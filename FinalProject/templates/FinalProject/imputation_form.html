@@ -1,0 +1,19 @@
+{% extends "finalProject/base.html" %}
+{% block title %}Select Imputation Method{% endblock %}
+{% block content %}
+<h1>Select Imputation Method</h1>
+<form method="POST" action="{% url 'apply_imputation' %}">
+    {% csrf_token %}
+    <input type="hidden" name="corrupted_image_id" value="{{ corrupted_image.id }}">
+    <select name="imputation_method">
+        <option value="mean">Mean</option>
+        <option value="median">Median</option>
+        <option value="mode">Mode</option>
+        <option value ="pca"> PCA</option>
+        <option value ="total_variation"> Total Variation in Painting</option>
+    </select>
+    <button type="submit">Apply Imputation</button>
+</form>
+
+<a href="{% url 'view_generated_image' pk=form.initial.corrupted_image_id %}" class="btn btn-secondary mt-3">Back to Corrupted Image</a>
+{% endblock %}

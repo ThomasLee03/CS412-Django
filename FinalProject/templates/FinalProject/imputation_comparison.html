@@ -1,0 +1,22 @@
+{% extends 'finalProject/base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<h1>Comparison of Imputation Methods</h1>
+
+{% for graph in bar_graphs %}
+    <div class="graph-container">
+        <!-- Original Image -->
+        <img src="{{ graph.image_file }}" alt="Original Image">
+        
+        <!-- PSNR Graph -->
+        <h4>PSNR</h4>
+        <img src="data:image/png;base64,{{ graph.psnr_graph|base64encode }}" alt="PSNR Graph">
+        
+        <!-- SSIM Graph -->
+        <h4>SSIM</h4>
+        <img src="data:image/png;base64,{{ graph.ssim_graph|base64encode }}" alt="SSIM Graph">
+    </div>
+{% endfor %}
+
+{% endblock %}

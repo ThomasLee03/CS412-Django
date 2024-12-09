@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'mini_fb',
     'marathon_analytics',
     'voter_analytics',
+    'FinalProject'
 ]
 
 MIDDLEWARE = [
@@ -79,7 +80,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'cs412.wsgi.application'
-
+LOGIN_REDIRECT_URL = 'dashboard'  # Redirect to dashboard after successful login
+LOGOUT_REDIRECT_URL = 'login'    # Redirect to login page after logout
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -133,6 +135,8 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
+
+
 
 #what is the purpose of this? 
 MEDIA_ROOT  = os.path.join(BASE_DIR, "media/")

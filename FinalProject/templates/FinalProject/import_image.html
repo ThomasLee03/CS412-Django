@@ -1,0 +1,16 @@
+{% extends 'finalProject/base.html' %}
+
+{% block title %}Upload Image{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">Upload Image</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_image_file" class="h5">Original Image</label>
+      {{ form.image_file }}  <!-- Make sure this matches the field name in the form -->
+    </div>
+    <button type="submit" class="btn btn-primary mt-4">Upload</button>
+  </form>
+  
+{% endblock %}
