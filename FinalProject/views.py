@@ -817,185 +817,186 @@ def apply_imputation(request):
                         "pca_plot": img_str,  # Pass the graph as base64 to template
                     },
                 )
-            elif pca_preprocessing:
-                imputed_image = column_imputation(corrupted_image_array, mask_array, imputation_method)
+        elif pca_preprocessing:
+            imputed_image = column_imputation(corrupted_image_array, mask_array, imputation_method)
 
-                # If PCA preprocessing is selected, apply PCA
+            # If PCA preprocessing is selected, apply PCA
 
-                MPSNRbest, MSSIMbest, rankL, PSNRL, SSIML = PCAbestSSIMPSNR(corrupted_image_array, original_image_array, imputed_image, mask_array)
-                # Save the PSNR-based imputed image
-                psnr_buffer = BytesIO()
-                psnr_image = PILImage.fromarray(MPSNRbest)
-                psnr_image.save(psnr_buffer, format="PNG")
-                psnr_content_file = ContentFile(psnr_buffer.getvalue(), name="PCA_PSNR_imputed.png")
+            MPSNRbest, MSSIMbest, rankL, PSNRL, SSIML = PCAbestSSIMPSNR(corrupted_image_array, original_image_array, imputed_image, mask_array)
+            # Save the PSNR-based imputed image
+            psnr_buffer = BytesIO()
+            psnr_image = PILImage.fromarray(MPSNRbest)
+            psnr_image.save(psnr_buffer, format="PNG")
+            psnr_content_file = ContentFile(psnr_buffer.getvalue(), name="PCA_PSNR_imputed.png")
 
-                # Calculate PSNR and SSIM for PSNR best image
-                psnr_value = PSNR(np.array(PILImage.open(original_image.image_file)), MPSNRbest)
-                ssim_value_psnr = compute_color_ssim(np.array(PILImage.open(original_image.image_file)), MPSNRbest)
+            # Calculate PSNR and SSIM for PSNR best image
+            psnr_value = PSNR(np.array(PILImage.open(original_image.image_file)), MPSNRbest)
+            ssim_value_psnr = compute_color_ssim(np.array(PILImage.open(original_image.image_file)), MPSNRbest)
 
-                psnr_imputed_image_instance = ImageGenerated.objects.create(
-                    image_file=psnr_content_file,
-                    imputation_method=f"{imputation_method} + PCA_PSNR",
-                    image = original_image,
-                    researcher=original_image.researcher,
-                    ssim_value=ssim_value_psnr,
-                    psnr_value=psnr_value
-                )
+            psnr_imputed_image_instance = ImageGenerated.objects.create(
+                image_file=psnr_content_file,
+                imputation_method=f"{imputation_method} + PCA_PSNR",
+                image = original_image,
+                researcher=original_image.researcher,
+                ssim_value=ssim_value_psnr,
+                psnr_value=psnr_value
+            )
 
-                # Save the SSIM-based imputed image
-                ssim_buffer = BytesIO()
-                ssim_image = PILImage.fromarray(MSSIMbest)
-                ssim_image.save(ssim_buffer, format="PNG")
-                ssim_content_file = ContentFile(ssim_buffer.getvalue(), name="PCA_SSIM_imputed.png")
+            # Save the SSIM-based imputed image
+            ssim_buffer = BytesIO()
+            ssim_image = PILImage.fromarray(MSSIMbest)
+            ssim_image.save(ssim_buffer, format="PNG")
+            ssim_content_file = ContentFile(ssim_buffer.getvalue(), name="PCA_SSIM_imputed.png")
 
-                # Calculate PSNR and SSIM for SSIM best image
-                psnr_value_ssim = PSNR(np.array(PILImage.open(original_image.image_file)), MSSIMbest)
-                ssim_value_ssim = compute_color_ssim(np.array(PILImage.open(original_image.image_file)), MSSIMbest)
+            # Calculate PSNR and SSIM for SSIM best image
+            psnr_value_ssim = PSNR(np.array(PILImage.open(original_image.image_file)), MSSIMbest)
+            ssim_value_ssim = compute_color_ssim(np.array(PILImage.open(original_image.image_file)), MSSIMbest)
 
-                ssim_imputed_image_instance = ImageGenerated.objects.create(
-                    image_file=ssim_content_file,
-                    imputation_method=f"{imputation_method} + PCA_SSIM",
-                    image=original_image,
-                    researcher=original_image.researcher,
-                    ssim_value=ssim_value_ssim,
-                    psnr_value=psnr_value_ssim
-                )
+            ssim_imputed_image_instance = ImageGenerated.objects.create(
+                image_file=ssim_content_file,
+                imputation_method=f"{imputation_method} + PCA_SSIM",
+                image=original_image,
+                researcher=original_image.researcher,
+                ssim_value=ssim_value_ssim,
+                psnr_value=psnr_value_ssim
+            )
 
-                # Generate the two separate plots for PCA convergence (PSNR and SSIM vs Rank)
-                fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))  # Adjusted the figure size for better fitting
+            # Generate the two separate plots for PCA convergence (PSNR and SSIM vs Rank)
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))  # Adjusted the figure size for better fitting
 
-                # PSNR Plot
-                ax1.plot(rankL, PSNRL, label="PSNR", color='blue', marker='o')
-                ax1.set_xlabel("PCA Rank")
-                ax1.set_ylabel("PSNR")
-                ax1.set_title("PSNR vs. PCA Rank")
-                ax1.legend()
+            # PSNR Plot
+            ax1.plot(rankL, PSNRL, label="PSNR", color='blue', marker='o')
+            ax1.set_xlabel("PCA Rank")
+            ax1.set_ylabel("PSNR")
+            ax1.set_title("PSNR vs. PCA Rank")
+            ax1.legend()
 
-                # SSIM Plot
-                ax2.plot(rankL, SSIML, label="SSIM", color='green', marker='x')
-                ax2.set_xlabel("PCA Rank")
-                ax2.set_ylabel("SSIM")
-                ax2.set_title("SSIM vs. PCA Rank")
-                ax2.legend()
+            # SSIM Plot
+            ax2.plot(rankL, SSIML, label="SSIM", color='green', marker='x')
+            ax2.set_xlabel("PCA Rank")
+            ax2.set_ylabel("SSIM")
+            ax2.set_title("SSIM vs. PCA Rank")
+            ax2.legend()
 
-                # Save the plots as PNG and convert to base64
-                img_buf = io.BytesIO()
-                plt.savefig(img_buf, format='png')
-                img_buf.seek(0)
-                img_str = base64.b64encode(img_buf.getvalue()).decode('utf8')
+            # Save the plots as PNG and convert to base64
+            img_buf = io.BytesIO()
+            plt.savefig(img_buf, format='png')
+            img_buf.seek(0)
+            img_str = base64.b64encode(img_buf.getvalue()).decode('utf8')
 
-                # Render the results page with the plots and images
-                return render(
-                    self.request,
-                    "FinalProject/imputed_image.html",
-                    {
-                        "original_image": original_image,
-                        "corrupted_image": corrupted_image,
-                        "psnr_imputed_image": psnr_imputed_image_instance,
-                        "ssim_imputed_image": ssim_imputed_image_instance,
-                        "imputation_method": "PCA",
-                        "psnr_value": psnr_value,
-                        "ssim_value": ssim_value_ssim,
-                        "pca_plot": img_str,  # Pass the base64 plot string to the template
-                    },
-                )
-            elif imputation_method == "total_variation":
-                # Perform Total Variation Inpainting
+            # Render the results page with the plots and images
+            return render(
+                request,
+                "FinalProject/imputed_image.html",
+                {
+                    "original_image": original_image,
+                    "corrupted_image": corrupted_image,
+                    "psnr_imputed_image": psnr_imputed_image_instance,
+                    "ssim_imputed_image": ssim_imputed_image_instance,
+                    "imputation_method": "PCA",
+                    "psnr_value": psnr_value,
+                    "ssim_value": ssim_value_ssim,
+                    "pca_plot": img_str,  # Pass the base64 plot string to the template
+                },
+            )
+        elif imputation_method == "total_variation":
+            # Perform Total Variation Inpainting
 
-                # Initialize CVXPY variables for the three color channels
-                variables = []
-                constraints = []
-                for i in range(3):  # For each color channel
-                    U = cp.Variable(shape=(corrupted_image_array.shape[0], corrupted_image_array.shape[1]))
-                    variables.append(U)
-                    constraints.append(cp.multiply(mask_array, U) == cp.multiply(mask_array, corrupted_image_array[:, :, i]))
+            # Initialize CVXPY variables for the three color channels
+            variables = []
+            constraints = []
+            for i in range(3):  # For each color channel
+                U = cp.Variable(shape=(corrupted_image_array.shape[0], corrupted_image_array.shape[1]))
+                variables.append(U)
+                constraints.append(cp.multiply(mask_array, U) == cp.multiply(mask_array, corrupted_image_array[:, :, i]))
 
-                # Define the TV minimization problem
-                prob = cp.Problem(cp.Minimize(cp.tv(*variables)), constraints)
-                prob.solve(verbose=True, solver=cp.SCS)
+            # Define the TV minimization problem
+            prob = cp.Problem(cp.Minimize(cp.tv(*variables)), constraints)
+            prob.solve(verbose=True, solver=cp.SCS)
 
-                # Get the reconstructed image
-                rec_arr = np.zeros_like(corrupted_image_array)
-                for i in range(3):
-                    rec_arr[:, :, i] = variables[i].value
-                rec_arr = np.clip(rec_arr, 0, 255).astype(np.uint8)
+            # Get the reconstructed image
+            rec_arr = np.zeros_like(corrupted_image_array)
+            for i in range(3):
+                rec_arr[:, :, i] = variables[i].value
+            rec_arr = np.clip(rec_arr, 0, 255).astype(np.uint8)
 
-                # Save the reconstructed image as a PNG
-                rec_image = PILImage.fromarray(rec_arr)
-                buffer = BytesIO()
-                rec_image.save(buffer, format="PNG")
-                content_file = ContentFile(buffer.getvalue(), name="TV_inpainting_imputed.png")
-            
-                # Calculate PSNR and SSIM by comparing the original image and the inpainted image
-                original_image_array = np.array(PILImage.open(original_image.image_file))  # Load original image
+            # Save the reconstructed image as a PNG
+            rec_image = PILImage.fromarray(rec_arr)
+            buffer = BytesIO()
+            rec_image.save(buffer, format="PNG")
+            content_file = ContentFile(buffer.getvalue(), name="TV_inpainting_imputed.png")
+        
+            # Calculate PSNR and SSIM by comparing the original image and the inpainted image
+            original_image_array = np.array(PILImage.open(original_image.image_file))  # Load original image
 
-                # Calculate PSNR and SSIM
-                psnr_value = PSNR(original_image_array, rec_arr)  # Compare original with reconstructed
-                ssim_value = compute_color_ssim(original_image_array, rec_arr)  # Compare original with reconstructed
+            # Calculate PSNR and SSIM
+            psnr_value = PSNR(original_image_array, rec_arr)  # Compare original with reconstructed
+            ssim_value = compute_color_ssim(original_image_array, rec_arr)  # Compare original with reconstructed
 
-                # Calculate PSNR and SSIM for the inpainted image
-                psnr_value = PSNR(corrupted_image_array, rec_arr)
-                ssim_value = compute_color_ssim(corrupted_image_array, rec_arr)
+            # Calculate PSNR and SSIM for the inpainted image
+            psnr_value = PSNR(corrupted_image_array, rec_arr)
+            ssim_value = compute_color_ssim(corrupted_image_array, rec_arr)
 
-                # Save the imputed image instance
-                imputed_image_instance = ImageGenerated.objects.create(
-                    image_file=content_file,
-                    imputation_method="TV Inpainting",
-                    researcher=original_image.researcher,
-                    ssim_value=ssim_value,
-                    image=original_image,
-                    psnr_value=psnr_value
-                )
+            # Save the imputed image instance
+            imputed_image_instance = ImageGenerated.objects.create(
+                image_file=content_file,
+                imputation_method="TV Inpainting",
+                researcher=original_image.researcher,
+                ssim_value=ssim_value,
+                image=original_image,
+                psnr_value=psnr_value
+            )
 
-                # Render the results page
-                return render(
-                    "FinalProject/imputed_image.html",
-                    {
-                        "original_image": original_image,
-                        "corrupted_image": corrupted_image,
-                        "imputed_image": imputed_image_instance,
-                        "imputation_method": "Total Variation Inpainting",
-                        "psnr_value": psnr_value,
-                        "ssim_value": ssim_value,
-                    },
-                )
-            else:
-                # Apply column imputation for other methods (mean, median, mode)
-                imputed_image_array = column_imputation(corrupted_image_array, mask_array, imputation_method)
+            # Render the results page
+            return render(
+                request,
+                "FinalProject/imputed_image.html",
+                {
+                    "original_image": original_image,
+                    "corrupted_image": corrupted_image,
+                    "imputed_image": imputed_image_instance,
+                    "imputation_method": "Total Variation Inpainting",
+                    "psnr_value": psnr_value,
+                    "ssim_value": ssim_value,
+                },
+            )
+        else:
+            # Apply column imputation for other methods (mean, median, mode)
+            imputed_image_array = column_imputation(corrupted_image_array, mask_array, imputation_method)
 
-                # Save the imputed image
-                buffer = BytesIO()
-                imputed_image = PILImage.fromarray(imputed_image_array)
-                imputed_image.save(buffer, format="PNG")
-                content_file = ContentFile(buffer.getvalue(), name=f"{imputation_method}_imputed.png")
+            # Save the imputed image
+            buffer = BytesIO()
+            imputed_image = PILImage.fromarray(imputed_image_array)
+            imputed_image.save(buffer, format="PNG")
+            content_file = ContentFile(buffer.getvalue(), name=f"{imputation_method}_imputed.png")
 
-                # Calculate PSNR and SSIM
-                original_image_array = np.array(PILImage.open(original_image.image_file))
-                psnr_value = PSNR(original_image_array, imputed_image_array)
-                ssim_value = compute_color_ssim(original_image_array, imputed_image_array)
+            # Calculate PSNR and SSIM
+            original_image_array = np.array(PILImage.open(original_image.image_file))
+            psnr_value = PSNR(original_image_array, imputed_image_array)
+            ssim_value = compute_color_ssim(original_image_array, imputed_image_array)
 
-                imputed_image_instance = ImageGenerated.objects.create(
-                    image_file=content_file,
-                    imputation_method=imputation_method,
-                    researcher=original_image.researcher,
-                    image=original_image,
-                    ssim_value=ssim_value,
-                    psnr_value=psnr_value
-                )
+            imputed_image_instance = ImageGenerated.objects.create(
+                image_file=content_file,
+                imputation_method=imputation_method,
+                researcher=original_image.researcher,
+                image=original_image,
+                ssim_value=ssim_value,
+                psnr_value=psnr_value
+            )
 
-                # Render the results page for non-PCA imputation
-                return render(
-                    request,
-                    "FinalProject/imputed_image.html",
-                    {
-                        "original_image": original_image,
-                        "corrupted_image": corrupted_image,
-                        "imputed_image": imputed_image_instance,
-                        "imputation_method": imputation_method,
-                        "psnr_value": psnr_value,
-                        "ssim_value": ssim_value,
-                    },
-                )
+            # Render the results page for non-PCA imputation
+            return render(
+                request,
+                "FinalProject/imputed_image.html",
+                {
+                    "original_image": original_image,
+                    "corrupted_image": corrupted_image,
+                    "imputed_image": imputed_image_instance,
+                    "imputation_method": imputation_method,
+                    "psnr_value": psnr_value,
+                    "ssim_value": ssim_value,
+                },
+            )
 
     return redirect("import_image")
 
