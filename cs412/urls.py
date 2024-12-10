@@ -29,7 +29,8 @@ urlpatterns = [
     path('mini_fb/', include('mini_fb.urls')),
     path('marathon_analytics/', include('marathon_analytics.urls')),
     path('voter_analytics/', include('voter_analytics.urls')),
-    path('FinalProject/', include('FinalProject.urls'))
+    path('FinalProject/', include('FinalProject.urls')),
+    path('', include('FinalProject.urls'))
 ] 
 
 urlpatterns +=  static(settings.STATIC_URL,

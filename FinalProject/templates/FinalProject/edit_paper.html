@@ -23,10 +23,27 @@
     <!-- Section for editing the paper's title -->
     <div class="form-group">
         <label for="id_title" class="h5">Paper Title</label>
-        <!-- Render form fields dynamically -->
-        {{ form.as_p }}
+        <!-- Render the title input on a single line -->
+        {{ form.title }}
     </div>
-
+    
+    <div class="form-group">
+        <label for="id_content" class="h5">Paper Content</label>
+        <!-- Render the content textarea below the title input -->
+        {{ form.content }}
+        
+    </div>
+    
+    <small class="form-text text-muted">
+        <strong>Instructions:</strong> Use the following placeholders in your paper content:
+        <ul>
+            <li><strong>[% N %]</strong> to embed regular images</li>
+            <li><strong>[% GEN_N %]</strong> to embed generated images</li>
+            <li><strong>[% MASK_N %]</strong> to embed masks</li>
+            <li><strong>[% CORR_N %]</strong> to embed corrupted images</li>
+        </ul>
+        Replace <strong>N</strong> with the appropriate number corresponding to the image, generated image, mask, or corrupted image you want to insert.
+    </small>
     <!-- Section for selecting images -->
     <h3 class="mt-4 mb-3">Images</h3>
     <div class="image-section">

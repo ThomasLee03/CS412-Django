@@ -1,8 +1,9 @@
--i https://pypi.org/simple
-asgiref==3.8.1; python_version >= '3.8'
-django==5.1.1; python_version >= '3.10'
-gunicorn==23.0.0; python_version >= '3.7'
-packaging==24.1; python_version >= '3.8'
-sqlparse==0.5.1; python_version >= '3.8'
-tzdata==2024.1; sys_platform == 'win32'
-whitenoise==6.7.0; python_version >= '3.8'
+# Django and other dependencies
+django
+gunicorn
+whitenoise
+plotly
+scikit-learn
+cvxpy
+matplotlib
+scikit-image

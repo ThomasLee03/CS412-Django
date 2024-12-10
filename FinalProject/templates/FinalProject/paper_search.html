@@ -40,8 +40,16 @@
         {% for paper in papers %}
             <div class="paper">
                 <a href="{% url 'paper_detail' paper.pk %}">{{ paper.title }}</a> 
-                <p>Created at: {{ paper.time_created }}</p> <!-- Display creation date -->
-                <!-- Add other paper details here -->
+                <p><strong>Researchers:</strong>
+                    {% for researcher in paper.paperwithresearcher_set.all %}
+                        {{ researcher.researcher.first_name }} {{ researcher.researcher.last_name }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        No researchers found
+                    {% endfor %}
+                    <br>
+                    Created at: {{ paper.time_created }}
+                </p>
+                <!-- Display creation date -->
             </div>
         {% endfor %}
     </ul>
